@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for ('static',filename="css/issue.css")}}">
+<script type="text/javascript" src="{{ url_for ('static',filename="js/issue.js") }}" ></script>
+{% endblock%}
+{%  block main %}
+    
+    {% block  left  %}
+            <ul class="">
+                <li><a href="#" onclick="show_issue_list()" >Issue List</a></li>
+            </ul>
+        <div class="fastissue leftnav-item" >
+            <form class="fastform" action="/issue" method="POST" enctype="multipart/form-data">
+                <input class="fastform-item" id="title_text" type="text" placeholder="Input Issue Title" name="title">
+                <div class="conditionbox">
+                    <select class="fastform-item"  id="severity" name="severity">
+                        <option value="Critical" selected>Critical</option>
+                        <option value="Major">Major</option>
+                        <option value="Minor">Minor</option>
+                    </select>
+                    <select class="fastform-item"  id="type" name="issue_type">
+                        <option value="issue" selected>issue</option>
+                        <option value="task">task</option>
+                        <option value="requirement">requirement</option>
+                        <option value="change">change</option>
+                        <option value="risk">risk</option>
+                    </select>
+                </div>
+                <button class="fastform-item"  id="fastform-button" type="submit">Fast Create Issue</button>
+            </form>
+
+            <div class="leftnav-item issue-up">
+                <a class="issue-item"  onclick="openfile('/Users/lihanmin/Documents/issue_list.xlsx')" >
+                    <img src="{{ url_for('static', filename='img/excel.svg' ) }}" style="height: 15px;"> issue list
+                </a>  
+                <a class="issue-item" onclick="openfile('/Users/lihanmin/Documents/issues/')">
+                    <img src="{{ url_for('static', filename='img/folder.svg' ) }}" style="height: 15px; "> Issue path
+                </a>
+            </div>
+            <div class="issue-item leftnav-item">
+                {{ lb_open_file | safe}}
+            </div>
+            
+        </div>
+
+    {% endblock %}
+
+    {% block right %}
+    <div class="statusCollettion">
+        <a href="#" onclick="show_status_issue('Open')">Open</a>
+        <a href="#" onclick="show_status_issue('Closed')">Closed</a>
+        <a href="#" onclick="show_status_issue('Pending')">Pending</a>
+        <a href="#" onclick="read_md('/Users/lihanmin/Documents/issues/20211006_读取本地文本文件并展示iframe/读取本地文本文件并展示iframe.md')">md_to_html</a>
+    </div>
+        <div class="issues" id="issues">
+            {{ issues_list | safe }}
+        </div>
+
+        
+        <textarea id="html_show_box"  class="html_show_box" onfocus="box_onfocus()" onblur="box_onblur()">
+ 
+        </textarea>
+
+
+        
+    {% endblock %}
+
+
+{%  endblock %}

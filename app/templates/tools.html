@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for ('static',filename="css/tools.css") }}">
+<script type="text/javascript" src="{{ url_for ('static',filename="js/tools.js") }}" ></script>
+{% endblock %}
+
+
+
+{% block left %}
+<ul class="">
+    <li><a href="/tools/cdr" >CDR convert</a></li>
+    <li><a href="/tools/cdrCfg" >CDR config</a></li>
+    <li><a href="#"> DailyCheck</a></li>
+</ul>
+{% endblock %}
+
+{% block right %}
+    
+{%  endblock %}

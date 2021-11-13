@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片打印</title>
+    <style>
+        *{
+            margin:0;
+            padding:0 ; 
+        }
+        table{
+            width:1075px;
+            height:1550px;
+            background-color: #fff;
+            border-collapse: collapse;
+        }
+
+        td {
+            border:1px dotted black;
+            text-align: center;
+        }
+
+        img {
+            height: 100%;
+            width: 98%;
+        }
+        .table_set {
+            width: 300px;
+            height: 200px;
+            background-color: #ddd;
+            margin: 50px auto 10px ;
+        }
+        
+        .set_form {
+            margin-left: 30px;
+        }
+        .table_set h3 {
+            text-align: center;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+        .set_form *{
+            padding: 3px;
+            margin: 5px;
+            position: relative;
+
+        }
+        .table_set p {
+            display: inline-block;
+        }
+
+        button {
+            position:absolute;
+            left: 67px;
+            width: 155px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="table_set" id="table_set">
+        <h3>表格样式设置</h3>
+        <div class="set_form">
+            <p> 行数：</p>
+            <input type="text" name="" id="rows" value="3">
+            <br>
+            <p> 列数：</p>
+            <input type="text" name="" id="cols" value="3">
+            <br>
+            <button onclick="btnclick()">确认</button>
+            
+        </div>
+    </div>
+    
+    <script>
+        function hide(id){
+            var ele = document.getElementById(id)
+            ele.style.display="none"
+        }
+        function btnclick(){
+            hide("table_set")
+            var row_num = document.getElementById("rows").value
+            var col_num = document.getElementById("cols").value
+            
+            var table = window.document.createElement("table");
+            var tr_height = 1550/row_num + "px"
+            var td_width = 1070/col_num + "px"
+            for(var i=0;i<row_num;i++){
+                var tr = document.createElement("tr");
+                tr.style.height = tr_height
+                for(var j=0;j<col_num;j++){
+                    var td = document.createElement("td");
+                    td.style.width = td_width
+                    tr.appendChild(td);
+                    var div = document.createElement("div")
+                    div.setAttribute("class","editable")
+                    div.setAttribute("contenteditable",true)
+                    td.appendChild(div)
+                }
+                table.appendChild(tr);
+            }
+            document.body.appendChild(table);
+            var td_divs = document.getElementsByClassName('editable')
+            for (edi=0;edi<td_divs.length;edi++) {
+                    td_divs[edi].style.width=td_width   
+                    td_divs[edi].style.height=tr_height
+            }
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for ('static',filename="css/knowledge.css")}}">
+<script type="text/javascript" src="{{ url_for ('static',filename="js/knowledge.js") }}" ></script>
+{% endblock%}
+{%  block main %}
+    
+    {% block  left  %}
+    <ul>
+        <li> <a  class="father_ul" chref="">Infra</a>
+            <ul>
+                <li><a href="">Fushion</a></li>
+                <li><a href="">Gausse</a></li>
+                <li><a href="">Cluster</a></li>
+                <li><a href="">OS</a></li>
+                <li><a href="">Security</a></li>
+            </ul>
+        </li>
+        <li></li>
+        <li></li>
+    </ul>
+    
+    <a href="">OCS</a>
+    <a href="">CRM</a>
+    {% endblock %}
+
+    {% block right %}
+        
+            <p>content</p>
+
+
+
+    {% endblock %}
+
+
+{%  endblock %}

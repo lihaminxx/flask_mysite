@@ -1,0 +1,70 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+.carousel {
+  width: 1000px;
+  height: 300px;
+  overflow: hidden;
+  margin: 0 auto;
+  position: relative;
+}
+ul li {
+  list-style: none;
+}
+a {
+  text-decoration-style: none;
+}
+.imgs img {
+  width: 100%;
+  float: left;
+}
+.prev,
+.next {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  top: 50%;
+  margin-bottom: -16px;
+}
+.prev img,
+.next img {
+  width: 100%;
+}
+.prev {
+  left: 20px;
+}
+.next {
+  right: 20px;
+}
+.prev:hover,
+.next:hover {
+  background-color: darkgrey;
+  cursor: pointer;
+}
+.count {
+  position: absolute;
+  width: 1000px;
+  height: 10px;
+  bottom: 10px;
+}
+.count ul {
+  width: 80px;
+  height: 10px;
+  margin: 0 auto;
+}
+.count ul li {
+  list-style: none;
+  width: 10px;
+  height: 10px;
+  background-color: blue;
+  border-radius: 50%;
+  float: left;
+  opacity: 0.5;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.count ul .active {
+  background-color: darkorange;
+  opacity: 1;
+}

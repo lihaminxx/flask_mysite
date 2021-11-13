@@ -1,0 +1,23 @@
+{
+    "cdr_type":"SMS",    
+    "cdr_detail": {
+        "cdrID":"话单ID",
+        "servicetype":"业务类型",
+        "starttime":"开始时间",
+        "endtime":"结束时间",
+        "calldetail":{
+            "callingNumber": "主叫号码",
+            "calledNumber": "被叫号码",
+            "cellID": "小区号码",
+            "romaingType": "漫游类型"
+        },
+        "duration":"通话时间",
+        "chargingdtail":{
+            "chargingAccount":"计费账户",
+            "chargingOffer":"计费产品",
+            "chargingNumber":"计费号码",
+            "chargingAmount":"计费金额"
+        }
+    }
+
+}

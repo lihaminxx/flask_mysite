@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for ('static',filename="css/cdrCfg.css") }}">
+<link rel="stylesheet" href="{{ url_for ('static',filename="js/cdrCfg.js") }}">
+{% endblock %}
+
+
+{%  block main %}
+
+<ul>
+    <li><a href="{{ url_for('static',filename='cdr/cdr_voice_cfg.json') }}" target="cfg_content">voice</a></li>
+    <li><a href="{{ url_for('static',filename='cdr/cdr_data_cfg.json') }}" target="cfg_content">data</a></li>
+    <li><a href="{{ url_for('static',filename='cdr/cdr_sms_cfg.json') }}" target="cfg_content">sms</a></li>
+    <li><a href="{{ url_for('static',filename='cdr/cdr_recharge_cfg.json') }}" target="cfg_content">recharge</a></li>
+</ul>
+    <!-- <div class="cdrcfg_detail">
+        <textarea rows=20></textarea>
+    </div> -->
+
+<iframe  name="cfg_content"   height="500px" scrolling="auto" width="100%" frameborder="1"></iframe>
+{%  endblock %}
+
+
+{% block js %}
+<script>
+ var a = "test"
+
+ function upload(input) {  
+    if (window.FileReader) {  
+        var file = input.files[0];  
+        filename = file.name.split(".")[0];  
+        var reader = new FileReader();  
+        reader.onload = function() {  
+            console.log(this.result)  
+            alert(this.result);  
+        }  
+        reader.readAsText(file);  
+    }   
+}
+
+</script>
+
+{% endblock%}

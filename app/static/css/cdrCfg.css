@@ -1,0 +1,18 @@
+.cdrcfg {
+  display: flex;
+  flex-flow: row;
+  height: 500px;
+}
+.cdrtype {
+  width: 20%;
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+}
+.cdrcfg_detail {
+  width: 80%;
+}
+textarea {
+  width: 96%;
+  height: 100%;
+}

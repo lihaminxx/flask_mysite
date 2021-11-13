@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mysite</title>
+    <link rel="stylesheet" href="{{ url_for ('static',filename="css/base.css") }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='suolong.ico') }}">
+
+    {% block head %}
+    {% endblock %}
+
+
+</head>
+<body>
+    {% block message %}
+        <div class="message">
+            {% for message in get_flashed_messages() %}
+            <div class="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endblock %}
+
+    <div class="header">
+        <ul>
+            <li id="header-logo">
+                <a href="/index">
+                <img src={{ url_for ('static',filename="img/home.svg") }} alt="Home"></a>
+            </li>
+            <li class="header-left"><a href="/issue">Issue</a></li>
+            <li class="header-left"><a href="/tools">Tools</a></li>
+            <li class="header-left"><a href="/knowledge">Knowledge</a></li>
+            <li class="header-right"><a href="/logout">Logout</a></li>
+            <li class="header-right"><a href="#"> {{ session['user_info']}}</a></li>
+            
+        </ul>
+    </div>
+    <div class="container">
+        <div class="left leftNav">
+            {% block left %}
+            {% endblock %}
+        </div>
+        <div class="right">
+            {% block right %}
+            {% endblock %}
+        </div>
+    </div>
+    <div class="footer">
+        {% block footer %}
+        <p>Posted by: Li Hanmin </p>
+        <p>Contact information: <a href="lihanminxx@163.com">lihanminxx@163.com</a>.</p>
+        {% endblock %}
+    </div>
+
+    <div id="issuepath" d= "{{ session['ISSUE_PATH']}}" style="display:none"></div>
+
+     
+    {% block js %}
+    {% endblock %}
+
+</body>
+</html>

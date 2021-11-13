@@ -1,0 +1,73 @@
+{% extends 'tools.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for ('static',filename="css/cdr.css") }}">
+<script type="text/javascript" src="{{ url_for ('static',filename="js/cdr.js") }}" ></script>
+
+{% endblock %}
+
+{%  block right %}
+
+<form method="POST" action="/tools/cdr" enctype="multipart/form-data">
+    <textarea calss="form-item" ></textarea>
+    <button class="form-item cdr-form-btn" onclick="convert_cdr()"> Convert </button>
+</form>
+
+<div class="cdr">
+    <div class="cdr_col">
+        <ul>
+            <li>name</li>
+            <li>servicetype</li>
+            <li>createtime</li>
+            <li>starttime</li>
+            <li>endtime</li>
+            <li class="charge_detail" >
+                <a onclick="s_toggle_1()" >charging_detail</a> 
+                <ul class="charge_detail_child" >
+                    <li>calling number</li>
+                    <li>called number</li>
+                    <li>duration</li>
+                    <li>mainoffer</li>
+                </ul>
+            </li>
+            <li class="network_detail">
+                <a onclick="s_toggle_2()" >network_detail</a> 
+                <ul class="network_detail_child">
+                    <li>cellid</li>
+                    <li>networktype</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="cdr_content">
+        <ul>
+            <li>name</li>
+            <li>servicetype</li>
+            <li>createtime</li>
+            <li>starttime</li>
+            <li>endtime</li>
+            <li class="charge_detail" >
+                 <a onclick="s_toggle_1()" >charging_detail</a> 
+                <ul class="charge_detail_child" >
+                    <li onclick="none">calling number</li>
+                    <li>called number</li>
+                    <li>duration</li>
+                    <li>mainoffer</li>
+                </ul>
+            </li>
+            <li class="network_detail">
+                <a onclick="s_toggle_2()" >network_detail</a> 
+                <ul class="network_detail_child">
+                    <li>cellid</li>
+                    <li>networktype</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<p onclick="convert_cdr()">convertCDR</p>
+<div id="dataid" d="{{cdr_json}}" style="display:none"></div>
+<div id="div1"></div>
+
+
+{%  endblock %}

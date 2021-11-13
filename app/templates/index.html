@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for ('static',filename="css/index.css")}}">
+<script type="text/javascript" src="{{ url_for ('static',filename="js/index.js") }}" ></script>
+{% endblock%}
+{%  block main %}
+    
+    {% block  left  %}
+    {% endblock %}
+
+    {% block right %}
+        <div id="fileopen">
+        </div>
+        <div class="cutoverBorder">
+            <span>Cutover Date: </span> <input id="edate" onchange="time_cal()" type="date" value="2021-12-15">
+            <h1>Date to cutover: <span id="codays"></span> Days</h1>
+        </div>
+        
+    {% endblock %}
+
+    {% block js %}
+    
+    <script>
+        function openfile(fpath)
+        {  
+            let xhttp = new XMLHttpRequest()
+            xhttp.onreadystatechange =  function(){
+                if(this.readyState == 4 && this.status == 200){
+                    document.getElementById('fileopen').innerText = "success"
+                }
+            }
+            xhttp.open("GET", fpath, true);
+            xhttp.send();
+        }
+    </script>
+        
+    {% endblock %}
+{%  endblock %}

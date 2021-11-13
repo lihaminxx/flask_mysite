@@ -1,0 +1,12 @@
+.left {
+  background-color: black;
+  width: 20%;
+  display: inline;
+  padding: 10px;
+}
+.right {
+  background-color: lightgray;
+  width: 80%;
+  display: inline;
+  padding: 10px;
+}

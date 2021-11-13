@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for ('static', filename='css/login.css')}}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='suolong.ico') }}">
+    <title>Login</title>
+</head>
+<body>
+    {% for message in get_flashed_messages() %}
+	<div class="alert">{{ message }}</div>
+    {% endfor %}
+    
+    <div class="login">
+        
+        <div id="loginform">
+            <p class="logintitle">Login</p>
+            <form action="/login" method="POST" >
+                <input class="loginformitem" type="text" name="username" placeholder="Input Username"  required/>
+                <input class="loginformitem"   type="password" name="password" placeholder="Input Password" required/>
+                <input class="loginformitem" id="loginbutton"  type="submit" value="Login"/>
+        </div>
+    </div>
+    <input type="number" />
+
+
+</body>
+</html>

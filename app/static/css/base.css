@@ -1,0 +1,130 @@
+* {
+    margin:0;
+    padding: 0;
+}
+
+.header,.footer{
+    height:50px;
+    line-height: 50px;
+    width: 100%;
+}
+
+.container {
+    background-color: #fff;
+    overflow: hidden;
+    min-width: 800px;
+    min-height: 498 px;
+    position: relative;
+
+}
+
+.left,.right {
+    float:left;
+}
+
+.left {
+    width:200px;
+    background-color: #fff;
+    min-height: 498px;
+    position: relative;
+    margin-right:-200px;
+}
+
+.right {
+    min-width: 300px;
+    margin-left: 180px;
+    width:100%;
+    margin-left:200px;
+}
+.header ul li {
+    list-style: none;
+}
+
+.header-right {
+    float:right;
+    margin-right:10px
+}
+#header-logo {
+    float: left;
+    margin-left:10px;
+}
+
+#header-logo::before{
+    background-image: url(../img/home.svg);
+}
+#header-logo img{
+    float: left;
+    margin-left:0px;
+    margin-top:10px;
+    width: 25px;
+    color: tomato;
+
+}
+
+.header ul  .header-left {
+    float:left;
+}
+
+.header a {
+    display: block;
+    text-decoration: none;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    color: white;
+    font-weight: normal;
+    border:1px solid transparent;
+    height: 49px;
+    padding: 0 15px;
+    line-height: 48px;
+    transition: background-color 0.5s, border-color 0.5s;
+    border-top: turquoise;
+    border-left: turquoise;
+    border-right: turquoise;
+    background:transparent;
+}
+
+.header a:hover {
+    background-color: #0582ba;
+}
+
+.header {
+    background-color:#0393d3;
+}
+.footer {
+    background-color: #0393d3;
+
+}
+
+.footer p {
+    float:left;
+    margin-left: 50px;
+    color: white;
+}
+.leftNav {
+    text-align: center;
+  }
+.leftNav a {
+    display: block;
+    text-decoration: none;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    color: #0393d3;
+    font-weight: normal;
+    border:1px solid transparent;
+    height: 35px;
+    padding: 0 auto;
+    line-height: 34px;
+    transition: background-color 0.5s, border-color 0.5s;
+    border-top: turquoise;
+    border-bottom: turquoise;
+    border-right: turquoise;
+    /* background-color: #f7f7f7; */
+    background:transparent ;
+  }
+
+  .leftNav a:hover{
+    font-weight: bold;
+    background-color: rgb(241, 241, 241);
+
+
+  }
