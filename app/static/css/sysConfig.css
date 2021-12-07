@@ -1,0 +1,14 @@
+
+.syscfgForm {
+    position: relative;
+    border: 1px solid black;
+    margin-bottom: 30px;
+    width: 500px;
+    height: 200px;
+    top: 20px ;
+}
+.syscfgForm  form-item {
+    float: left;
+    display: block;
+    margin: 0px auto;
+}

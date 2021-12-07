@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for ('static',filename="css/sysConfig.css") }}">
+<script type="text/javascript" src="{{ url_for ('static',filename="js/sysConfig.js") }}" ></script>
+{% endblock %}
+
+
+
+{% block left %}
+<ul class="">
+    <li><a href="/sysConfig" >sysConfig</a></li>
+</ul>
+{% endblock %}
+
+{% block right %}
+
+<form class="syscfgForm" action="" method="post">
+    <div class="form-item">
+        <label for="issuepath">issue path:</label>
+        <input id="issuepath" type="text">
+    </div>
+    <div class="form-item">
+        <label for="issuelist">issue list file(excel):</label>
+        <input id="issuelist" type="text">
+    </div>
+    <div class="form-item">
+        <label for="issuelist">OS type:</label>
+        <input id="issuelist" type="text">
+    </div>
+    <div class="form-item">
+        <label for="issuelist">OS info:</label>
+        <input id="issuelist" type="text">
+    </div> 
+    <button class="form-item" type="submit">Save</button>
+</form>
+    
+{%  endblock %}

@@ -31,6 +31,7 @@
             <li class="header-left"><a href="/issue">Issue</a></li>
             <li class="header-left"><a href="/tools">Tools</a></li>
             <li class="header-left"><a href="/knowledge">Knowledge</a></li>
+            <li class="header-left"><a href="/sysConfig">SysConfig</a></li>
             <li class="header-right"><a href="/logout">Logout</a></li>
             <li class="header-right"><a href="#"> {{ session['user_info']}}</a></li>
             
@@ -54,7 +55,6 @@
     </div>
 
     <div id="issuepath" d= "{{ session['ISSUE_PATH']}}" style="display:none"></div>
-
      
     {% block js %}
     {% endblock %}

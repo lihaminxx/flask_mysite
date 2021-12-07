@@ -1,4 +1,5 @@
 .cutoverBorder  {
-    margin-top: 100px;
-    margin-left: 100px;
+    padding-top:100px;
+    padding-left: 100px;
+    position: fixed;
 }

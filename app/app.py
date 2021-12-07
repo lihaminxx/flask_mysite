@@ -9,19 +9,23 @@ from werkzeug.datastructures import ContentSecurityPolicy
 from werkzeug.exceptions import MethodNotAllowed
 import codecs, markdown
 from urllib.parse import unquote
+import sqlite3
+import win32gui ,win32com, win32com.client
+from py_excel import excelFormat
+
 app = Flask(__name__)
 
+con = sqlite3.connect('flask_site.db', check_same_thread=False)
+cur = con.cursor()
 
 app.config['SECRET_KEY'] = 'dev'
 app.config['DEBUG'] = True
-app.config['ISSUE_LIST'] = r'/Users/lihanmin/Documents/issue_list.xlsx'
-app.config['ISSUE_PATH'] = r'/Users/lihanmin/Documents/issues/'
-app.config['PROJECTS_PATH'] = r'/Users/lihanmin/Documents/Projects/'
+app.config['ISSUE_LIST'] = r'D:\\Issues\\LBY_Issue_List_LiHanmin_2021.xlsx'
+app.config['ISSUE_PATH'] = r'D:\\Issues\\'
+app.config['PROJECTS_PATH'] = r'D:\\Issues\\'
 # app.config.from_object("setting.dev")
 
 # functions 
-
-
 
 def valid_login(uname,passwd):
     user_list = { 'admin':'123','lihanmin':'123','guest':'123'}
@@ -108,6 +112,7 @@ class MyIssue:
         app.config['ISSUE_LIST'] = r'/Users/lihanmin/Documents/issue_list.xlsx'
         # the path for save issue relate file, will create folder for issue under this path
         app.config['ISSUE_PATH'] = r'/Users/lihanmin/Documents/issue/'
+        20211118: change the data source from excel to sqlite db
     """
     def __init__(self,title,cdate,issue_type):
         self.title = title.rstrip().replace(' ','_')
@@ -149,8 +154,8 @@ class MyIssue:
             return True
 
     def fun(series):
-        fname = series['No.']
-        return '=HYPERLINK("/Users/lihanmin/Documents/issue_list.xlsx")'.format(fname,fname)
+        fname = series['ID']
+        return '=HYPERLINK(D:\\Issues\\LBY_Issue_List_LiHanmin_2021.xlsx)'.format(fname,fname)
     
     def show_sp_stauts_issue(i_status):
         print(i_status)
@@ -159,29 +164,26 @@ class MyIssue:
     def add_to_list(self):
         """
         the format of the issue list 
-        No.	CreateTime	Type	Title	Description	Priority	Status	Progress	Owner	SR	CR	RFC
+        ID	CreateTime	Type	Title	Description	Priority	Status	Progress	Owner	SR	CR	RFC
         """
         try:
             df = pd.read_excel(app.config['ISSUE_LIST'])
             df = df[df['Title'].notnull()]
             new_issue_dict = {
-                'No.'        : max(df['No.']) +1  if df['No.'].size != 0 else 1 ,
+                'ID'        : max(df['ID']) +1  if df['ID'].size != 0 else 1 ,
                 'CreateTime' : self.cdate,
                 'Type'       : self.issue_type ,
                 'Title'      : self.title,
-                'Description': '',
+                # 'Description': '',
                 'Priority'   : 'Minor',
                 'DueDate'    : '',
                 'Status'     : 'Open',
                 'Progress'   : '',
-                'Owner'      : session['user_info'],
-                'SR'         :'',
-                'CR'         :'',
-                'RFC'        :''
+                'Owner'      : session['user_info']
             }
             df.loc[df.shape[0]] = new_issue_dict
             # add hyperlink
-            # df['No.'] = df.apply(func=self.fun, axis=1)
+            # df['ID'] = df.apply(func=self.fun, axis=1)
             # print(df)
             df.to_excel(app.config['ISSUE_LIST'],sheet_name='Issues',index=False)
             return True
@@ -215,16 +217,35 @@ class MyKnowledge:
         pass
 
 
+'''
+安装 pywin32使用 import win32gui 时报错，ImportError: DLL load failed: 找不到指定的模块。
+在Scripts目录下执行如下脚本即可（管理员）
+python pywin32_postinstall.py -install
+'''
+def _window_enum_callback(hwnd, wildcard):
+    '''
+    Pass to win32gui.EnumWindows() to check all the opened windows
+    把想要置顶的窗口放到最前面，并最大化
+    '''
+    if re.match(wildcard, str(win32gui.GetWindowText(hwnd))) is not None:
+        win32gui.BringWindowToTop(hwnd)
+        # 先发送一个alt事件，否则会报错导致后面的设置无效：pywintypes.error: (0, 'SetForegroundWindow', 'No error message is available')
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shell.SendKeys('%')
+        # 设置为当前活动窗口
+        win32gui.SetForegroundWindow(hwnd)
+        # 最大化窗口
+        win32gui.ShowWindow(hwnd, win32com.SW_MAXIMIZE)
+
+# --------------------------------------ROUTE--------------------------
 
 @app.route('/project', methods =['POST'])
 def fast_create_project():
     return "create proeject"
 
-
-
-
 @app.route('/issue', methods=['POST','GET'])
 def f_issue_init():
+    lb_open_file=""
     if request.method == "POST":
         title =request.form.get('title') 
         itype = request.form.get('issue_type')  
@@ -236,15 +257,19 @@ def f_issue_init():
             issue.add_to_list()
             flash("issue init success")
             lb_open_file = "<a href='%s' target='_self' >Open issue file</a>" % issue.file_path
+            excelFormat()
         except Exception as e:
+            print(e)
             flash ("issue init failed")
             flash (e)
-        
-        return render_template('issue.html', lb_open_file = lb_open_file )
-    else:
-        return render_template('issue.html' )
 
+    return render_template('issue.html', lb_open_file = lb_open_file )
+    
 
+@app.route('/sysConfig', methods=['POST','GET'])
+def sysConfig():
+    return render_template('sysConfig.html')
+    
 
 @app.route('/issues/status/<statustype>',methods=['GET'])
 def show_status_issue(i_status):
@@ -303,9 +328,9 @@ def login():
         upass = request.form.get('password')
         if valid_login(uname,upass):
             session['user_info'] = uname
-            session['ISSUE_LIST'] = r'/Users/lihanmin/Documents/issue_list.xlsx'
-            session['ISSUE_PATH'] = r'/Users/lihanmin/Documents/issues/'
-            session['PROJECTS_PATH'] = r'/Users/lihanmin/Documents/Projects/'
+            session['ISSUE_LIST'] = app.config['ISSUE_LIST']
+            session['ISSUE_PATH'] = app.config['ISSUE_PATH']
+            session['PROJECTS_PATH'] = app.config['PROJECTS_PATH']
             return redirect('/index')
         else:
             flash ('Invalid username or password.')
@@ -364,9 +389,22 @@ def api_issues():
     df = df.fillna("")
     # 时间格式转换 yyyymmdd to yyyy/mm/dd
     # df['CreateTime'] = df['CreateTime'].map(lambda code: str(code)[0:4]+"/" +str(code)[4:6] + "/" + str(code)[6:8] )
-    df = df.drop(['Description'],axis=1)
+    # df = df.drop(['Description'],axis=1)
     ihtml = df.to_html(index=False,table_id="issue_list")
     return ihtml
+
+@app.route('/api/excel/format/', methods=['GET'])
+def api_excel_format():
+    '''     
+    change the excel style, like with height , hight light. add filter etc. 
+    '''
+    df = pd.read_excel(app.config['ISSUE_LIST'])
+    df = df.fillna("")
+    # df = df.drop(['Description'],axis=1)
+    df = df[df['Status'] == i_status]
+    ihtml = df.to_html(index=False,table_id="issue_list")
+    return ihtml
+
 
 @app.route('/api/issues/status/<i_status>', methods=['GET'])
 def api_issues_sp_status(i_status):
@@ -375,18 +413,65 @@ def api_issues_sp_status(i_status):
     '''
     df = pd.read_excel(app.config['ISSUE_LIST'])
     df = df.fillna("")
-    df = df.drop(['Description'],axis=1)
+    # df = df.drop(['Description'],axis=1)
     df = df[df['Status'] == i_status]
     ihtml = df.to_html(index=False,table_id="issue_list")
     return ihtml
 
+@app.route('/api/issues_db/status/<i_status>', methods=['GET'])
+def api_issues_sp_status_db(i_status):
+    '''     
+    show specified status issue list on the page from database(sqlite3)
+    '''
+    issues_list = cur.execute('SELECT * FROM issues where status="' + i_status +'" order by ID').fetchall()
+    issues_list = str(issues_list)
+    return issues_list
+
 @app.route('/api/readMD/<path:fpath>')
 def readMD(fpath):
-    fpath = "/" + fpath
+    '''
+     API for open the file. if we want open the file from web, will use this api
+    '''
+    # fpath = "/" + fpath  # for linux need add / before path, windows no need 
+    try:
+        fpath = unquote(fpath,"utf-8")
+        input_file = open(fpath, mode="r", encoding="utf-8")
+        text = input_file.read()
+        return text
+    except Exception as a:
+        return "[ERROR] the markdown file "+ fpath  + " load failed \n" + str(a) 
+
+@app.route('/api/openlocal/Path/<path:fpath>')
+def openlocal_path(fpath):
+    # fpath = "/" + fpath  # for linux need add / before path, windows no need 
     fpath = unquote(fpath, 'utf-8')
-    input_file = open(fpath, mode="r", encoding="utf-8")
-    text = input_file.read()
-    return text
+    try:
+        os.startfile(fpath,'explore')
+        if re.match(".+/$",fpath):
+            wintitle = re.match(".+/(.+)/$",fpath).group(1)
+        else:
+            wintitle=fpath
+        print ('wintitile+='+ wintitle)
+        win32gui.EnumWindows(_window_enum_callback, ".*%s.*" % wintitle)
+        return "success"
+    except Exception as a:
+        print(a)
+        if a.errno == 2:
+            return "Cannot found the file or path"
+        return str(a)
+
+@app.route('/api/openlocal/file/<path:fpath>')
+def openlocal_file(fpath):
+    fpath = unquote(fpath, 'utf-8')
+    os.startfile(fpath)
+    return "sucess"
+
+@app.route('/api/openlocal/file/md/<path:fpath>')
+def openlocal_md(fpath):
+    fpath = unquote(fpath, 'utf-8')
+    os.system(fpath)
+    win32gui.EnumWindows(_window_enum_callback, ".*%s.*" % 'VSCode-huawei')
+    return "sucess"
 
 @app.route('/api/md_to_html')
 def md_to_html():
@@ -398,11 +483,30 @@ def md_to_html():
     'markdown.extensions.tables',
     'markdown.extensions.fenced_code',
     ]
-    input_file = codecs.open(r'/Users/lihanmin/Documents/issues/20211006_读取本地文本文件并展示iframe/读取本地文本文件并展示iframe.md', mode="r", encoding="utf-8")
+    input_file = codecs.open()
     text = input_file.read()
     html = markdown.markdown(text,extensions=extensions)
     return html
 
+
+
+# @app.route('/uploadFile', methods=['POST', 'GET'])
+# def upload_file_to_server():
+#     if request.method == 'POST':
+#         f = request.files['file']
+#         basepath = os.path.dirname(__file__)  # 当前文件所在路径
+#         upload_path = os.path.join(basepath, 'static\uploads',secure_filename(f.filename))  #注意：没有的文件夹一定要先创建，不然会提示没有该路径
+#         f.save(upload_path)
+#         return redirect(url_for('upload'))
+#     return render_template('upload.html')
+
+
+# @app.route('/impExcelToDB', methods=['POST', 'GET'])
+# def imp_excel_to_db():
+#     if request.method == 'POST':
+#         f = request.files['file']
+#         return redirect(url_for('upload'))
+#     return render_template('upload.html')
 
 
 # @app.route('/<path:re_path>')
@@ -426,6 +530,6 @@ def md_to_html():
 #     return  "xxx"
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='127.0.0.1',port=8484)
     
 
