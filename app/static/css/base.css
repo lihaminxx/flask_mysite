@@ -7,11 +7,6 @@
     z-index: 2;
 }
 
-.footer {
-    position: relative;
-    margin-top: 505px;
-    z-index: 2;
-}
 .header,.footer{
     height:50px;
     line-height: 50px;
@@ -21,11 +16,16 @@
 .container {
     background-color: #fff;
     overflow: hidden;
-    min-width: 800px;
-    min-height: 477 px;
+    /* min-width: 800px; */
+    /* min-height: 477 px; */
     position: relative;
     top: 50px;
+    padding-bottom: 50px;
+}
 
+.footer{
+    position: fixed;
+    bottom: 0
 }
 
 .left,.right {
@@ -35,7 +35,7 @@
 .left {
     width:200px;
     background-color: #fff;
-    min-height: 400px;
+    /* min-height: 400px; */
     position: fixed;
     margin-right:-200px;
     z-index: 2;
@@ -138,3 +138,91 @@
     font-weight: bold;
     background-color: rgb(241, 241, 241);
   }
+
+
+
+  /* Basic Grey */   /* class名称为basic-grey*/
+.normalForm {
+    position: fixed;
+    top:70px;
+    left:400px;
+    width: 500px;
+    margin-left:auto;
+    margin-right:auto;
+    max-width: 500px;
+    background: #F7F7F7;
+    padding: 25px 15px 25px 10px;
+    font: 12px Georgia, "Times New Roman", Times, serif;
+    color: #888;
+    text-shadow: 1px 1px 1px #FFF;
+    border:1px solid #E4E4E4;
+    }
+    .normalForm h1 {
+    font-size: 25px;
+    padding: 0px 0px 10px 40px;
+    display: block;
+    border-bottom:1px solid #E4E4E4;
+    margin: -10px -15px 30px -10px;;
+    color: #888;
+    }
+    .normalForm h1>span {
+    display: block;
+    font-size: 11px;
+    }
+    .normalForm label {
+    display: block;
+    margin: 0px;
+    }
+    .normalForm label>span {
+    float: left;
+    width: 20%;
+    text-align: right;
+    padding-right: 10px;
+    margin-top: 10px;
+    color: #888;
+    }
+    .normalForm input[type="text"],  input[type="file"], .normalForm input[type="email"], .normalForm textarea, .normalForm select {
+    border: 1px solid #DADADA;
+    color: #888;
+    height: 30px;
+    margin-bottom: 16px;
+    margin-right: 6px;
+    margin-top: 2px;
+    outline: 0 none;
+    padding: 3px 3px 3px 5px;
+    width: 70%;
+    font-size: 12px;
+    line-height:15px;
+    box-shadow: inset 0px 1px 4px #ECECEC;
+    -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+    -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+    }
+    .normalForm textarea{
+    padding: 5px 3px 3px 5px;
+    }
+    .normalForm select {
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+    width: 70%;
+    height: 35px;
+    line-height: 25px;
+    }
+    .normalForm textarea{
+    height:100px;
+    }
+    .normalForm .button {
+    background: #E27575;
+    border: none;
+    padding: 10px 25px 10px 25px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+    }
+    .normalForm .button:hover {
+    background: #CF7A7A
+    }

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block head %}
+<script type="text/javascript" src="{{ url_for ('static',filename="js/tools.js") }}" ></script>
+{% endblock %}
+
+
+
+{% block left %}
+<ul class="">
+    <li><a href="/tools/cdr" >CDR convert</a></li>
+    <li><a href="/tools/cdrCfg" >CDR config</a></li>
+    <li><a href="/tools/import" >Import to table</a></li>
+    <li><a href="/tools/export" >Export to excel</a></li>
+    <li><a href="#"> DailyCheck</a></li>
+</ul>
+{% endblock %}
+
+{% block right %}
+
+<form class="normalForm" id="" action="" target="i_frame" >
+    <label>
+        <span>Please Choose file:</span>
+        <input id="importfile" name="importfile" type="file"/>
+    </label>
+    <label>
+        <span>Table Name:</span>
+        <input id="importtable" name="importtable" type="text" />
+    </label>
+    <label>
+        <span>&nbsp;</span>
+        <button class="button"  onclick="imp_excel_to_table()">Import</button>
+    </label>
+</form>
+<iframe src="" name="i_frame"  style="display: none;"></iframe>
+    
+    
+{%  endblock %}

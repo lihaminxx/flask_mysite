@@ -1,3 +1,9 @@
+# how to start 
+
+py -m venv env 
+
+
+
 ## sqlite初始化数据 
 
 ```sql

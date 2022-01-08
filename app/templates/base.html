@@ -7,6 +7,8 @@
     <title>Mysite</title>
     <link rel="stylesheet" href="{{ url_for ('static',filename="css/base.css") }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='suolong.ico') }}">
+    <script type="text/javascript" src="{{ url_for ('static',filename="js/jquery.js") }}" ></script>
+
 
     {% block head %}
     {% endblock %}
@@ -21,7 +23,7 @@
             {% endfor %}
         </div>
     {% endblock %}
-
+    <div class="page">
     <div class="header">
         <ul>
             <li id="header-logo">
@@ -55,7 +57,7 @@
     </div>
 
     <div id="issuepath" d= "{{ session['ISSUE_PATH']}}" style="display:none"></div>
-     
+</div>
     {% block js %}
     {% endblock %}
 

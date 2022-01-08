@@ -51,6 +51,13 @@ width: 174px;
    background-color: #0393d3;
    border: 1px solid black;
  }
+#issues table thead td {
+  text-align: center;
+  padding-inline: 10px;
+  background-color: #0393d3;
+  border: 1px solid black;
+}
+ 
 
 /* #issues table td {
   padding-inline: 10px;
@@ -80,7 +87,7 @@ width: 174px;
 }
 
 #issues table a {
-  width: 100%;
+  /* width: 100%; */
   text-decoration: underline;
   cursor: pointer;
 }
@@ -95,27 +102,33 @@ width: 174px;
   width: 15px;
 }
 #issues table thead tr th:nth-child(2) {
-  width: 50px;
+  width: 60px;
 }
 #issues table thead tr th:nth-child(3) {
   width: 30px;
 }
 
 #issues table thead tr th:nth-child(4) {
-  width: 20%;
+  width: 250px;
 }
 #issues table thead tr th:nth-child(5) {
-  width: 30px;
+  width: 45px;
 }
 #issues table thead tr th:nth-child(6) {
-  width: 30px;
+  width: 40px;
 }
 #issues table thead tr th:nth-child(7) {
-  width: 30%;
+  width: 250px;
 }
 #issues table thead tr th:nth-child(8) {
-  width: 30px;
+  width: 40px;
 }
+
+#issues table thead tr td:nth-child(1) {
+  width: 40px;
+}
+
+
 #issues table tr td:nth-child(3){
   width: 10px;
 }
@@ -123,9 +136,20 @@ width: 174px;
   text-align: left;
   padding-left: 3px;
 }
+
+#issues table tr td:nth-child(5) {
+  text-align: left;
+  padding-left: 3px;
+  width: 30px;
+}
 #issues table tr td:nth-child(7) {
   text-align: left;
   padding-left: 3px;
+}
+#issues table tr td:nth-child(8) {
+  text-align: left;
+  padding-left: 3px;
+  width:25px;
 }
 
 #issues textarea {
@@ -213,8 +237,6 @@ width: 174px;
   width: 50px;
   display: none;
 }
-
-
 /*  ISSUE LIST from database, Distinguished from excel */
 
 #issues_db {
@@ -289,4 +311,121 @@ margin-left: -10px;
 width: 60px;
 height: 38px;
 background-color: #0393d3;
+}
+
+
+/*  ---------------------------------Edit box -------------------------------- */
+
+
+/* Basic Grey */   /* class名称为basic-grey*/
+.basic-grey {
+  position: fixed;
+  top:50px;
+  left:400px;
+  width: 500px;
+  margin-left:auto;
+  margin-right:auto;
+  max-width: 500px;
+  background: #F7F7F7;
+  padding: 25px 15px 25px 10px;
+  font: 12px Georgia, "Times New Roman", Times, serif;
+  color: #888;
+  text-shadow: 1px 1px 1px #FFF;
+  border:1px solid #E4E4E4;
+  }
+  .basic-grey h1 {
+  font-size: 25px;
+  padding: 0px 0px 10px 40px;
+  display: block;
+  border-bottom:1px solid #E4E4E4;
+  margin: -10px -15px 30px -10px;;
+  color: #888;
+  }
+  .basic-grey h1>span {
+  display: block;
+  font-size: 11px;
+  }
+  .basic-grey label {
+  display: block;
+  margin: 0px;
+  }
+  .basic-grey label>span {
+  float: left;
+  width: 20%;
+  text-align: right;
+  padding-right: 10px;
+  margin-top: 10px;
+  color: #888;
+  }
+  .basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey textarea, .basic-grey select {
+  border: 1px solid #DADADA;
+  color: #888;
+  height: 25px;
+  margin-bottom: 16px;
+  margin-right: 6px;
+  margin-top: 2px;
+  outline: 0 none;
+  padding: 3px 3px 3px 5px;
+  width: 70%;
+  font-size: 12px;
+  line-height:15px;
+  box-shadow: inset 0px 1px 4px #ECECEC;
+  -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+  -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+  }
+  .basic-grey textarea{
+  padding: 5px 3px 3px 5px;
+  }
+  .basic-grey select {
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance: none;
+  text-indent: 0.01px;
+  text-overflow: '';
+  width: 70%;
+  height: 35px;
+  line-height: 25px;
+  }
+  .basic-grey textarea{
+  height:100px;
+  }
+  .basic-grey .button {
+  background: #E27575;
+  border: none;
+  padding: 10px 25px 10px 25px;
+  color: #FFF;
+  box-shadow: 1px 1px 5px #B6B6B6;
+  border-radius: 3px;
+  text-shadow: 1px 1px 1px #9E3F3F;
+  cursor: pointer;
+  }
+  .basic-grey .button:hover {
+  background: #CF7A7A
+  }
+
+
+
+.tablePageButton {
+  display: none;
+  position:fixed;
+  top:550px;
+  left: 200px;
+  width: 500px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 2px solid black;
+  color: rgb(255, 255, 255);
+}
+
+.tablePageButton #pageUp {
+  width:50px ;
+  height: 45px;
+  position:relative;
+}
+
+.tablePageButton #pageDown {
+  width:50px;
+  height: 45px;
+  float: right;
+  position:relative;
 }

@@ -1,8 +1,9 @@
 
-function imp_issue_from_excel(){
-    alert('import')
+function imp_excel_to_table(){
+   
+    
 }
 
-function exp_issue_to_excel(){
+function exp_table_to_excel(){
     alert('import')
 }

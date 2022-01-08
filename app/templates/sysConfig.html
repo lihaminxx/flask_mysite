@@ -14,24 +14,28 @@
 
 {% block right %}
 
-<form class="syscfgForm" action="" method="post">
-    <div class="form-item">
+<form class="syscfgForm" id="syscfgForm" action="" method="POST">
+    <!-- <div class="form-item">
         <label for="issuepath">issue path:</label>
-        <input id="issuepath" type="text">
-    </div>
-    <div class="form-item">
-        <label for="issuelist">issue list file(excel):</label>
-        <input id="issuelist" type="text">
-    </div>
-    <div class="form-item">
-        <label for="issuelist">OS type:</label>
-        <input id="issuelist" type="text">
-    </div>
-    <div class="form-item">
-        <label for="issuelist">OS info:</label>
-        <input id="issuelist" type="text">
-    </div> 
-    <button class="form-item" type="submit">Save</button>
+        <input id="issuepath" name="issuepath" type="text" value="{{ is_path}}">
+    </div> -->
+    <label>
+        <span>issue path:</span>
+        <input id="issuepath" name="issuepath" type="text" value="{{ is_path}}">
+    </label>
+    <label>
+        <span>issue list file(excel):</span>
+        <input id="issuelist" name="issuelist" type="text" value="{{ is_list}}">
+    </label>
+    <label>
+        <span>OS type:</span>
+        <input id="issuepath" name="ostype" type="text" value="{{ os_type}}">
+    </label>
+    <label>
+        <span>&nbsp;</span>
+        <button class="button" type="submit" onclick="updateSysConfig()">Save</button>
+    </label>
+    
 </form>
     
 {%  endblock %}

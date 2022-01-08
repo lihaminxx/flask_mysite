@@ -20,11 +20,17 @@ cur = con.cursor()
 
 app.config['SECRET_KEY'] = 'dev'
 app.config['DEBUG'] = True
-app.config['ISSUE_LIST'] = r'D:\\Issues\\LBY_Issue_List_LiHanmin_2021.xlsx'
-app.config['ISSUE_PATH'] = r'D:\\Issues\\'
-app.config['PROJECTS_PATH'] = r'D:\\Issues\\'
-# app.config.from_object("setting.dev")
+# app.config['ISSUE_LIST'] = r'D:\\Issues\\LBY_Issue_List_LiHanmin_2021.xlsx'
+# app.config['ISSUE_PATH'] = r'D:\\Issues\\'
+# app.config['PROJECTS_PATH'] = r'D:\\Issues\\
 
+def init_config():
+    app.config['ISSUE_LIST'] = cur.execute('SELECT value FROM sysconfig where id=2').fetchall()[0][0]
+    app.config['ISSUE_PATH'] = cur.execute('SELECT value FROM sysconfig where id=1').fetchall()[0][0]
+    app.config['PROJECTS_PATH'] = cur.execute('SELECT value FROM sysconfig where id=1').fetchall()[0][0]
+    # app.config.from_object("setting.dev")
+
+init_config()
 # functions 
 
 def valid_login(uname,passwd):
@@ -114,10 +120,14 @@ class MyIssue:
         app.config['ISSUE_PATH'] = r'/Users/lihanmin/Documents/issue/'
         20211118: change the data source from excel to sqlite db
     """
-    def __init__(self,title,cdate,issue_type):
+    def __init__(self,title,cdate,issue_type,status="",priority="",description="",id=""):
         self.title = title.rstrip().replace(' ','_')
         self.cdate = cdate
         self.issue_type = issue_type
+        self.status = status
+        self.priority = priority
+        self.description = description
+        self.id = id
         # self.cdate_7days = datetime.datetime.strptime(cdate,'YYYYMMDD')
         self.issue_path = app.config['ISSUE_PATH'] + self.cdate + '_' + self.title
         self.list_file_path = app.config['ISSUE_LIST']
@@ -144,7 +154,15 @@ class MyIssue:
                 f.write('- Owner: ' +  session['user_info'] +'\n')
                 f.write('- Path : ' +  self.issue_path +'\n\n')
                 f.write('# Description\n\n\n')
+                f.write('\n\n\n')
                 f.write('# Progress\n\n\n')
+                f.write('\n\n\n')
+                f.write('# Analyse record \n\n\n')
+                f.write('\n\n\n')
+                f.write('# Root cause\n\n\n')      
+                f.write('\n\n\n')
+                f.write('# Solution\n\n\n')   
+                f.write('\n\n\n')
                 f.flush()
                 f.close()
                 return True
@@ -153,10 +171,31 @@ class MyIssue:
         else:
             return True
 
-    def fun(series):
-        fname = series['ID']
-        return '=HYPERLINK(D:\\Issues\\LBY_Issue_List_LiHanmin_2021.xlsx)'.format(fname,fname)
-    
+    def saveedit(self):
+        try:
+            df = pd.read_excel(app.config['ISSUE_LIST'])
+            # check the record if exist
+            df_title = df[df['ID'] == int(self.id)]
+            if df_title['ID'].shape[0] == 1 and df_title['ID'].values[0] > 0 :
+                new_issue_dict = {
+                'ID'        : int(self.id) ,
+                'CreateTime' : self.cdate,
+                'Type'       : self.issue_type ,
+                'Title'      : self.title,
+                'Priority'   : self.priority,
+                'Status'     : self.status,
+                'Desription'   : self.description,
+                'Owner'      : session['user_info']
+                }
+                df.loc[df[df['ID']==int(self.id)].index.to_list()[0]] = new_issue_dict
+                df.to_excel(app.config['ISSUE_LIST'],sheet_name='Issues',index=False)
+                return True
+            else:
+                return false
+        except Exception as a:
+            print(a)
+            return a
+
     def show_sp_stauts_issue(i_status):
         print(i_status)
 
@@ -164,30 +203,37 @@ class MyIssue:
     def add_to_list(self):
         """
         the format of the issue list 
-        ID	CreateTime	Type	Title	Description	Priority	Status	Progress	Owner	SR	CR	RFC
+        ID	CreateTime	Type	Title	Description	Priority	Status	Desription	Owner	SR	CR	RFC
         """
         try:
             df = pd.read_excel(app.config['ISSUE_LIST'])
-            df = df[df['Title'].notnull()]
-            new_issue_dict = {
-                'ID'        : max(df['ID']) +1  if df['ID'].size != 0 else 1 ,
-                'CreateTime' : self.cdate,
-                'Type'       : self.issue_type ,
-                'Title'      : self.title,
-                # 'Description': '',
-                'Priority'   : 'Minor',
-                'DueDate'    : '',
-                'Status'     : 'Open',
-                'Progress'   : '',
-                'Owner'      : session['user_info']
-            }
-            df.loc[df.shape[0]] = new_issue_dict
-            # add hyperlink
-            # df['ID'] = df.apply(func=self.fun, axis=1)
-            # print(df)
-            df.to_excel(app.config['ISSUE_LIST'],sheet_name='Issues',index=False)
-            return True
+            df_title = df[df['Title'] == self.title]
+            df_cdate = df_title[df['CreateTime']== self.cdate]
+            if df_cdate.shape[0] == 0 :
+                print('fast create issue')
+                df = df[df['Title'].notnull()]
+                print (df.shape)
+                new_issue_dict = {
+                    'ID'        : max(df['ID']) +1  if df['ID'].size != 0 else 1 ,
+                    'CreateTime' : self.cdate,
+                    'Type'       : self.issue_type ,
+                    'Title'      : self.title,
+                    # 'Description': '',
+                    'Priority'   : 'Minor',
+                    'DueDate'    : '',
+                    'Status'     : 'Open',
+                    'Desription'   : '',
+                    'Owner'      : session['user_info']
+                }
+                print ('df.shape' + str(df.shape[0]))
+                df.loc[df.shape[0]] = new_issue_dict
+                df.to_excel(app.config['ISSUE_LIST'],sheet_name='Issues',index=False)
+                return True
+            else:
+                print ('Error: record already exist')
+                return False
         except Exception as a:
+            print('Get error when create issue:')
             print(a)
             return a
 
@@ -239,6 +285,13 @@ def _window_enum_callback(hwnd, wildcard):
 
 # --------------------------------------ROUTE--------------------------
 
+
+
+
+@app.route('/tools/import')
+def improt_excel_to_table():
+    return render_template('tools/import_excel_to_table.html' )
+
 @app.route('/project', methods =['POST'])
 def fast_create_project():
     return "create proeject"
@@ -254,10 +307,14 @@ def f_issue_init():
         try:
             issue.create_path()
             issue.create_readme()
-            issue.add_to_list()
-            flash("issue init success")
-            lb_open_file = "<a href='%s' target='_self' >Open issue file</a>" % issue.file_path
-            excelFormat()
+            if issue.add_to_list():
+                flash("issue init success")
+                lb_open_file = "<a href='%s' target='_self' >Open issue file</a>" % issue.file_path
+                excelFormat()
+                flash ("success")
+            else:
+                 flash("issue init failed")
+            
         except Exception as e:
             print(e)
             flash ("issue init failed")
@@ -268,7 +325,23 @@ def f_issue_init():
 
 @app.route('/sysConfig', methods=['POST','GET'])
 def sysConfig():
-    return render_template('sysConfig.html')
+    if request.method == "POST":
+        # change the DB data 
+        is_path = request.form.get('issuepath')
+        is_list = request.form.get('issuelist')
+        os_type = request.form.get('ostype')
+        cur.execute('update sysconfig set value=\'' + is_path +'\' where id=1')
+        cur.execute('update sysconfig set value=\'' + is_list +'\' where id=2')
+        cur.execute('update sysconfig set value=\'' + os_type +'\' where id=3')
+        cur.execute('commit')
+
+    else:
+        #  get from db 
+        is_path = cur.execute('SELECT value FROM sysconfig where id=1').fetchall()[0][0]
+        is_list = cur.execute('SELECT value FROM sysconfig where id=2').fetchall()[0][0]
+        os_type = cur.execute('SELECT value FROM sysconfig where id=3').fetchall()[0][0]
+        print (os_type)
+    return render_template('sysConfig.html', is_path=is_path , is_list=is_list, os_type=os_type)
     
 
 @app.route('/issues/status/<statustype>',methods=['GET'])
@@ -407,16 +480,28 @@ def api_excel_format():
 
 
 @app.route('/api/issues/status/<i_status>', methods=['GET'])
-def api_issues_sp_status(i_status):
+def api_issues_sp_status(i_status="all"):
     '''     
     show specified status issue list on the page 
     '''
+    print(app.config['ISSUE_LIST'])
     df = pd.read_excel(app.config['ISSUE_LIST'])
     df = df.fillna("")
     # df = df.drop(['Description'],axis=1)
-    df = df[df['Status'] == i_status]
+    if i_status != "all":
+        df = df[df['Status'] == i_status]
+        
     ihtml = df.to_html(index=False,table_id="issue_list")
     return ihtml
+
+
+@app.route('/api/fastcreateissue', methods=['POST'])
+def api_fastcreateissue():
+    '''     
+    show specified status issue list on the page from database(sqlite3)
+    '''
+    
+    return issues_list
 
 @app.route('/api/issues_db/status/<i_status>', methods=['GET'])
 def api_issues_sp_status_db(i_status):
@@ -487,6 +572,21 @@ def md_to_html():
     text = input_file.read()
     html = markdown.markdown(text,extensions=extensions)
     return html
+
+
+@app.route('/api/issues/saveedit' ,methods=['POST'])
+def issue_saveedit():
+    if request.method == "POST":
+        title = request.form.get('title') 
+        cdate = request.form.get('createtime') 
+        status = request.form.get('status') 
+        priority = request.form.get('priority') 
+        description = request.form.get('description') 
+        iid = request.form.get('id') 
+        itype = request.form.get('type') 
+        issue = MyIssue(title,cdate,itype,status,priority,description,iid)
+        issue.saveedit()
+    return render_template('issue.html' )
 
 
 

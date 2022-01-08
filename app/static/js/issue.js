@@ -3,6 +3,7 @@ window.onload =  function(){
     // show_status_issue_v1('Open')
     issue_list_add_link()
     tableHeadToSelect('Status')
+
 }
 
 // 页面加载好了之后现执行
@@ -19,9 +20,10 @@ function issue_list_add_link()
     let issue_list = document.getElementById('issue_list')
     // 通过隐藏的标签获取session变量
     let issue_path = document.getElementById('issuepath').getAttribute('d');
-    console.log(issue_list)
-    if (issue_list)
+    // console.log(issue_list.rows.length)
+    if (issue_list && issue_list.rows.length>1)
     {
+        
         for(var i=1;i<issue_list.rows.length;i++)
         {
             col_content = issue_list.rows[i].cells[0].innerText
@@ -29,21 +31,87 @@ function issue_list_add_link()
             // console.log(col_content)
             // url_content = issue_path  + issue_list.rows[i].cells[1].innerText + "_" +  issue_list.rows[i].cells[3].innerText
             // console.log(issue_list.rows[i].cells[1].innerText.replace(/\-/g,''))
-            url_content = issue_path  + issue_list.rows[i].cells[1].innerText.replace(/\-/g,'') + "_" +  issue_list.rows[i].cells[3].innerText
-            
-            title_url = issue_path  + issue_list.rows[i].cells[1].innerText.replace(/\-/g,'') + "_" +  issue_list.rows[i].cells[3].innerText +"/" + title_content +".md"
+            // alert(issue_list.rows[i].cells[1].innerText.replace(/\-/g,''))
+            url_content = issue_path  + "\\"  + issue_list.rows[i].cells[1].innerText.replace(/\-/g,'') + "_" +  issue_list.rows[i].cells[3].innerText
+            title_url = issue_path  + "\\" + issue_list.rows[i].cells[1].innerText.replace(/\-/g,'') + "_" +  issue_list.rows[i].cells[3].innerText +"/" + title_content +".md"
             issue_list.rows[i].cells[0].innerHTML = '<a onclick="openlocal_path(\'' +url_content  + '\')">' + col_content + '</a> '
             issue_list.rows[i].cells[3].innerHTML = '<a onclick="read_md(\'' +title_url  + '\')">' + title_content + '</a> '
             
             // change \n to return
-            title_progress =  issue_list.rows[i].cells[6].innerText
-            title_progress = title_progress.replace('\\n',String.fromCharCode(10));
+            title_Desription =  issue_list.rows[i].cells[6].innerText
+            title_Desription = title_Desription.replace('\\n',String.fromCharCode(10));
 
-            issue_list.rows[i].cells[6].innerHTML ='<textarea name="aaa"  id="" cols="46">' + title_progress + '</textarea>'
+            issue_list.rows[i].cells[6].innerHTML ='<textarea name="aaa"  id="" cols="46" >' + title_Desription + '</textarea>'
             // issue_list.rows[i].cells[0].innerHTML = 'url_content'
         } 
     }
 }
+
+// 给表添加一列，用于存放编辑选项 Edit/Delete
+function issue_list_add_option(){
+    let issue_list = document.getElementById('issue_list')
+    let newTH = issue_list.rows[0].insertCell(8)
+    newTH.innerHTML='Option'
+    for(let i=1;i<issue_list.rows.length;i++)
+    {
+        let newNameTD = issue_list.rows[i].insertCell(8)
+        // onclick事件里传this是为了获取当前行
+        newNameTD.innerHTML='<a class="edit_btn" onclick="edit_issue(this)">Edit </a>|<a class="delete_btn""> Deleted</a>'
+    }
+
+
+}
+
+// 修改表格里的行
+function edit_issue(edd){
+    // console.log(edd.parentNode.parentNode)
+    // 事件里传入的是a标签，需要获通过父节点获取整个行
+    row = edd.parentNode.parentNode
+    id = row.cells[0].innerText
+    createtime = row.cells[1].innerText
+    type = row.cells[2].innerText
+    title = row.cells[3].innerText
+    priority = row.cells[4].innerText
+    status = row.cells[5].innerText
+    description = row.cells[6].firstChild.value
+    owner =  row.cells[7].innerText
+    
+    ed_form = document.forms["edit_form"]
+    ed_form.elements["id"].value = id
+    ed_form.elements["title"].value = title
+    ed_form.elements["createtime"].value = createtime
+    ed_form.elements["status"].value = status
+    ed_form.elements["priority"].value = priority
+    ed_form.elements["type"].value = type
+    ed_form.elements["description"].value = description
+
+    el_edit_issue = document.getElementById('issue_edit')
+    el_edit_issue.style.display = "block"
+
+}
+
+
+// function save_edit(this){
+//     console.log(this)
+//     let r_url = '/api/issues/saveedit' 
+//     xhttp.open("POST", r_url, true);
+//     xhttp.send();
+//     xhttp.onreadystatechange =  function(){
+//         if(this.readyState == 4 && this.status == 200){
+//             console.log(fpath+' open success')
+//         }
+//     }
+// }
+
+function cancel_edit(){
+    el_edit_issue = document.getElementById('issue_edit')
+    el_edit_issue.style.display = "none"
+}
+function delete_issue(){
+
+    console.log('delete issue')
+}
+
 
 // 将指定表头（按列的名字）替换成选择框，这里是用来替换STATUS表头，增加过滤OPEN/CLOSE/PENDING的
 function tableHeadToSelect(colName){
@@ -51,7 +119,7 @@ function tableHeadToSelect(colName){
     if (e_table)
     {   
         let th = e_table.rows[0]
-        let e_select = '<select name="Status" id="issue_status">' + 
+        let e_select = '<select name="Status" id="issue_status" onchange="statusFilter()">' + 
         '<option value="open">Open</option> '+
         '<option value="closed">Closed</option> '+ 
         '<option value="pending">Pending</option> '+ 
@@ -64,6 +132,65 @@ function tableHeadToSelect(colName){
     }
 }
 
+// 将指定表头（按列的名字）替换成选择框，这里是用来替换STATUS表头，增加过滤OPEN/CLOSE/PENDING的
+function tableHeadToSelect_v1(colName){
+    let e_table = document.getElementById('issue_list')
+    if (e_table)
+    {   
+        let th = e_table.rows[0]
+        let e_select = '<select name="Status" id="issue_status" onchange="statusFilter_v1()">' + 
+        '<option value="open">Open</option> '+
+        '<option value="closed">Closed</option> '+ 
+        '<option value="pending">Pending</option> '+ 
+    '</select>'
+        for (j=0;j<th.cells.length;j++){
+            if (th.cells[j].innerText == colName){
+                th.cells[j].innerHTML = e_select
+            }
+        }
+    }
+}
+
+function statusFilter(){
+    let el = document.getElementById('issue_status')
+    if (el){
+        let statusText =  el.options[el.selectedIndex].text
+        show_status_issue(statusText)
+    }
+}
+
+function statusFilter_v1(){
+    let el = document.getElementById('issue_status')
+    if (el){
+        let statusText =  el.options[el.selectedIndex].text
+        show_status_issue_v1(statusText)
+    }
+}
+
+
+
+
+// 表格内容搜索框，搜索指定列的内容，并显示结果 cols(列索引)，如[1,2,3]
+function tableContentSearch(searchBoxID,tableID,cols=[]){
+    let input, filter, table, tr, td, i;
+    table = document.getElementById(tableID)
+    tr = table.getElementsByTagName("tr");
+    input = document.getElementById(searchBoxID);
+    filter = input.value.toUpperCase();
+    // 如果没有指定搜索列，则全部搜索 
+    // cols=[0,1,2,3,4,5,6,7,8]
+    
+    for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+          if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        } 
+      }
+}
 
 
 
@@ -98,6 +225,7 @@ function show_issue_list(){
         {
             document.getElementById("issues").innerHTML=xmlhttp.responseText;
             issue_list_add_link()
+            issue_list_add_option()
             // time_format()
         }
     }
@@ -117,6 +245,10 @@ function show_status_issue(i_status){
             document.getElementById("issues").innerHTML=xmlhttp.responseText;
             issue_list_add_link()
             // time_format()
+            tableHeadToSelect('Status')
+            issue_list_add_option()
+            // table_pagenation('issue_list')
+
         }
     }
 }
@@ -131,12 +263,9 @@ function show_status_issue_v1(i_status){
         if(this.readyState == 4 && this.status == 200){
             let res_str=xhttp.responseText.replace('\[\(','').replace('\)\]','')
             let res_list = res_str.split('\),\ \(')
-            // hide the issue_excel list 
-            var el_excel = document.getElementById('issues')
-            el_excel.style.display = "block"
 
             // show as table 
-            var el = document.getElementById('issues_db')
+            var el = document.getElementById('issues')
             el.innerHTML=""
             // init table 
             var table_head =[
@@ -146,7 +275,7 @@ function show_status_issue_v1(i_status){
                 'Title',
                 'Priority',
                 'Status',
-                'Progress',
+                'Desription',
                 'Owner'
             ];
             //创建table
@@ -163,12 +292,15 @@ function show_status_issue_v1(i_status){
             table_inst_list_to_row_th(thead1,table_head)
 
             // 把内容加进去
-            table_inst_list_to_rows(table,res_list);
+            if (res_list.length>1){
+                table_inst_list_to_rows(table,res_list);
+            }
+            
 
             // 把建好的表加到指定元素下
             el.appendChild(table);
             
-            // 两重列表插入到表里
+            // 将双层列表[[],[]]数据插入到表里
             function table_inst_list_to_rows(base , t_list){
                 for(let i=0;i<t_list.length;i++){
                     var row=base.insertRow();
@@ -198,6 +330,10 @@ function show_status_issue_v1(i_status){
                 }
             }
             issue_list_add_link()
+
+            //表头处理
+
+            // 给Status字段添加筛选下拉
             tableHeadToSelect('Status')
         }
     }
@@ -267,7 +403,12 @@ function createIssue()
     xhttp.send();
     xhttp.onreadystatechange =  function(){
         if(this.readyState == 4 && this.status == 200){
-            console.log(fpath+' issue create success')
+            if (xhttp.responseText == "success"){
+                alert(xhttp.responseText)
+            }else{
+                alert(xhttp.responseText)
+            }
+            // console.log(fpath+' issue create success')
         }
     }
 }
@@ -328,6 +469,7 @@ document.onkeydown=function(e){    //对整个页面监听
     if(keyNum==27){  
         document.getElementById("html_show_box").style.display = "none"
         document.getElementById("edit_show_box").style.display = "none"
+        document.getElementById("issue_edit").style.display = "none"
     }  
 
 }
@@ -342,3 +484,46 @@ function box_onfocus(){
     document.getElementById("html_show_box").style.backgroundColor = "#eff"
 }
 
+function table_pagenation(tableid){
+    var nowPage = 0, //当前页
+    count = 10, //每页显示多少条消息
+    pageAll = 0; //总页数
+    var testDataList = []; //创建一个存放数据的数组
+    testDataList = document.getElementById(tableid)
+    
+    if (testDataList){
+        pageAll = Math.ceil((testDataList.rows.length) / count); //计算总页数
+        var setTable = function () { //数据渲染表格
+            var onePageData = []; //用来存放一页的数据
+            for (var i = 1;i<=count; i++) { //满足当前数据小于没到当前页的最后一条数据 ，并且当前数据没到最后一条数据
+                {
+                    onePageData.push(testDataList.rows[i + nowPage * count]);// 这个循环会循环五次  把五条数据放到列表里
+                }
+            }
+            testDataList.querySelector('tbody').innerHTML=''
+            for (let tri=0; tri<onePageData.length; tri++){
+                isr = testDataList.querySelector('tbody').insertRow(testDataList.rows.length-1)
+                isr.innerHTML = onePageData[tri].innerHTML; //渲染当前页数据
+            }
+        }
+        setTable();
+    }
+    else{
+        alert(tableid + ' not exist')
+    }
+}
+    
+// function PreTablepage() { //上一页
+//     console.log('click')
+//     if (nowPage == 0) //当前页数是第一页则返回
+//         return
+//     nowPage--;
+//     // setTable();
+// }
+// function NextTablepage () {//下一页
+//     if (nowPage >= pageAll-1) //当前页数是最后一页则返回  这么写是因为总页数不一定是整数
+//         return
+//     nowPage++;
+//     setTable();
+//     debugger
+// }

@@ -50,17 +50,75 @@
 
     {% block right %}
     <div class="statusCollettion">
+        <a href="#" onclick="show_status_issue('all')">All</a>
         <a href="#" onclick="show_status_issue('Open')">Open</a>
         <a href="#" onclick="show_status_issue('Closed')">Closed</a>
         <a href="#" onclick="show_status_issue('Pending')">Pending</a>
+        <input type="text" id="myInput" onkeyup="tableContentSearch('myInput','issue_list')" placeholder="Search...">
     </div>
         <div class="issues" id="issues">
+            
         </div>
+        <div class="tablePageButton">
+            <button type="button" id="pageUp" onclick="PreTablepage()" >Pre</button>
+            <button type="button" id="pageDown" onclick="NextTablepage()" >Next</button>
+        </div>
+
         <div class="issues_db" id="issues_db">
         </div>        
         <textarea id="html_show_box"  class="html_show_box" onfocus="box_onfocus()" onblur="box_onblur()">
         </textarea>
         <button id="edit_show_box"   onfocus="box_onfocus()" onblur="box_onblur()" >Edit</button>
+        <div class="basic-grey" id="issue_edit" style="display: none;">
+            <form id="edit_form" action="/api/issues/saveedit" method="post" enctype="multipart/form-data">
+                <label style="display: none;">
+                    <span>ID :</span>
+                    <input type="text" name="id" placeholder="" />
+                </label>
+                <label>
+                    <span>Title :</span>
+                    <input  type="text" name="title" readonly="readonly" placeholder="" />
+                </label>
+                <label>
+                    <span>Create Time :</span><input   type="text" name="createtime" readonly="readonly" placeholder="" />
+                </label>                
+                <label>
+                    <span>Severity :</span><select   name="priority">
+                        <option value="Critical">Critical</option>
+                        <option value="Major">Major</option>
+                        <option value="Minor" selected>Minor</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Type :</span><select   name="type">
+                        <option value="issue">issue</option>
+                        <option value="task" selected>task</option>
+                        <option value="requirement">requirement</option>
+                        <option value="change">change</option>
+                        <option value="risk">risk</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Status :</span><select name="status">
+                        <option value="Open">Open</option>
+                        <option value="Closed">Closed</option> 
+                        <option value="Pending">Pending</option> 
+                    </select>
+                </label>
+                <label>
+                    <span>Description :</span></span><textarea name="description" id="" ></textarea>
+                </label>
+                <label>
+                    <span>&nbsp;</span>
+                    <input type="button" class="button" value="Cancel" onclick="cancel_edit()" />
+                    <input type="submit" class="button" value="Save" />
+                    
+                </label>
+                
+            </form>
+
+           
+        </div>
     {% endblock %}
 
 
