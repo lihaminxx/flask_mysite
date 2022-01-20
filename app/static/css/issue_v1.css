@@ -19,11 +19,6 @@
   
 }
 
-/* #issue_list {
- background-color: #F1F5F9;
- border-collapse: collapse;
- margin-left: 50px;
-} */
 
 .conditionbox {
   float:left;
@@ -60,7 +55,7 @@ width: 174px;
   text-align: center;
   padding-inline: 10px;
   background-color: #0393d3;
-  /* border: 1px solid black; */
+  border: 1px solid black;
 }
  
 .issues table tr {
@@ -114,18 +109,30 @@ width: 174px;
   width: 45px;
 }
 .issues table thead tr th:nth-child(6) {
-  width: 40px;
+  width: 60px;
+  padding: 0;
 }
+/*  ---------------------------------issue status slector -------------------------------- */
+.select_issue_status {
+  position: relative;
+  padding: 0;
+  width: 100%;
+  height: 38px;
+  background-color: #0393d3;
+  font-weight: 200;
+  border: hidden;
+  }
+
+  
 .issues table thead tr th:nth-child(7) {
-  width: 300px;
+  width: 250px;
 }
-.issues table thead tr tr:nth-child(8) {
+.issues table thead tr th:nth-child(8) {
   width: 40px;
-  background-color: red;
 }
 
-.issues table thead tr td:nth-child(1) {
-  width: 40px;
+.issues table thead tr th:nth-child(9) {
+  width: 55px;
 }
 
 
@@ -133,7 +140,7 @@ width: 174px;
   width: 10px;
 }
 .issues table tr td:nth-child(4) {
-  text-align: left;
+  text-align: left  ;
   padding-left: 3px;
 }
 
@@ -235,17 +242,6 @@ width: 174px;
 }
 
 
-/*  ---------------------------------issue status slector -------------------------------- */
-
-.select_issue_status {
-position: relative;
-top: 0px;
-margin-left: -10px;
-width: 60px;
-height: 38px;
-background-color: #0393d3;
-font-weight: 100;
-}
 
 
 /*  ---------------------------------Edit box -------------------------------- */

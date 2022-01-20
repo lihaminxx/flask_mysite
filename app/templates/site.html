@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for ('static',filename="css/site.css")}}">
+<script type="text/javascript" src="{{ url_for ('static',filename="js/site.js") }}" ></script>
+{% endblock%}
+{%  block main %}
+    
+    {% block left  %}
+    <ul>
+        <a><li onclick="show_knowledge('host')">OS</li></a>
+        <a><li onclick="show_knowledge('db')">DB</li></a>
+        <a><li onclick="show_knowledge('url')">URL</li></a>
+    </ul>
+    {% endblock %}
+
+    {% block right %}
+    <div class="statusCollettion" id="search">
+    </div>
+    <div class="showtable" ></div>
+    {% endblock %}
+
+
+{%  endblock %}

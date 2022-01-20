@@ -1,0 +1,19 @@
+{% extends 'tools.html' %}
+
+{% block right %}
+<div class="showtable_input">
+    <label>
+        <span>Table Name:</span>
+        <input id="tablename" name="tablename" type="text" />
+    </label>
+    <label>
+        <span>&nbsp;</span>
+        <button class="button"  onclick="showtable()">Show</button>
+    </label>
+</div>
+
+<div class="showtable" id="showtable">
+</div>  
+
+
+{%  endblock %}

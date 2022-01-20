@@ -1,3 +1,9 @@
+
+
+window.onload =  function(){
+    show_knowledge('host')
+}
+
 // 表格内容搜索框，搜索指定列的内容，并显示结果 cols(列索引)，如[1,2,3]
 function tableContentSearch(searchBoxID,tableID,cols=[]){
     let input, filter, table, tr, td, i;
@@ -39,14 +45,14 @@ function add_seachiput(tableid){
 }
 function show_knowledge(obj){
     xmlhttp=new XMLHttpRequest();
-    xmlhttp.open("GET","/api/knowledge/"+obj,true);
+    xmlhttp.open("GET","/api/site/"+obj,true);
     xmlhttp.send();
     xmlhttp.onreadystatechange=function()
     {
         if (xmlhttp.readyState==4 && xmlhttp.status==200)
         {
             if (xmlhttp.responseText ==  "Failed"){
-                alert('get knowledge '+ obj +' failed')
+                alert('get site '+ obj +' failed')
                 return;
             }
             let res_str=xmlhttp.responseText.replace('\[\(','').replace('\)\]','')
@@ -115,7 +121,7 @@ function show_knowledge(obj){
                 }
             }
 
-            add_seachiput('host')
+            add_seachiput(obj)
         }
     }
 }

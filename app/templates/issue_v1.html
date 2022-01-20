@@ -1,18 +1,17 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for ('static',filename="css/issue.css")}}">
-<script type="text/javascript" src="{{ url_for ('static',filename="js/issue.js") }}" ></script>
+<link rel="stylesheet" href="{{ url_for ('static',filename="css/issue_v1.css")}}">
+<script type="text/javascript" src="{{ url_for ('static',filename="js/issue_v1.js") }}" ></script>
 {% endblock%}
 {%  block main %}
     
     {% block  left  %}
             <ul class="">
-                <li><a href="#" onclick="show_status_issue('Open')" >Issue List<span style="font-size: 5px;"> (Excel)</span></a></li>
                 <li><a href="/api/issues/v1"  >Issue List<span style="font-size: 5px;"> (DB)</span></a></li>
             </ul>
         <div class="fastissue leftnav-item" >
-            <form class="fastform" action="/issue" method="POST" enctype="multipart/form-data">
+            <form class="fastform" action="/api/issues/v1/fastcreate" method="POST" enctype="multipart/form-data">
                 <input class="fastform-item" id="title_text" type="text" placeholder="Input Issue Title" name="title">
                 <div class="conditionbox">
                     <select class="fastform-item"  id="severity" name="severity">
@@ -40,9 +39,6 @@
                     <img src="{{ url_for('static', filename='img/folder.svg' ) }}" style="height: 15px; "> Issue path
                 </a>
             </div>
-            <div class="issue-item leftnav-item">
-                {{ lb_open_file | safe}}
-            </div>
             
         </div>
 
@@ -54,7 +50,7 @@
         <a href="#" onclick="show_status_issue('Open')">Open</a>
         <a href="#" onclick="show_status_issue('Closed')">Closed</a>
         <a href="#" onclick="show_status_issue('Pending')">Pending</a>
-        <input type="text" id="myInput" onkeyup="tableContentSearch('myInput','issue_list')" placeholder="Search...">
+        <input type="text" id="myInput" onkeyup="tableContentSearch('myInput','issues')" placeholder="Search...">
     </div>
         <div class="issues" id="issues">
             
@@ -64,59 +60,56 @@
             <button type="button" id="pageDown" onclick="NextTablepage()" >Next</button>
         </div>
 
-        <div class="issues" id="issues_v1">
-        </div>        
+       
         <textarea id="html_show_box"  class="html_show_box" onfocus="box_onfocus()" onblur="box_onblur()">
         </textarea>
         <button id="edit_show_box"   class="edit_show_box" onfocus="box_onfocus()" onblur="box_onblur()" >Edit</button>
         <div class="form_edit" id="issue_edit" style="display: none;">
-            <form id="edit_form" action="/api/issues/saveedit" method="post" enctype="multipart/form-data">
-                <label style="display: none;">
-                    <span>ID :</span>
-                    <input type="text" name="id" placeholder="" />
-                </label>
-                <label>
-                    <span>Title :</span>
-                    <input  type="text" name="title" readonly="readonly" placeholder="" />
-                </label>
-                <label>
-                    <span>Create Time :</span><input   type="text" name="createtime" readonly="readonly" placeholder="" />
-                </label>                
-                <label>
-                    <span>Severity :</span><select   name="priority">
-                        <option value="Critical">Critical</option>
-                        <option value="Major">Major</option>
-                        <option value="Minor" selected>Minor</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Type :</span><select   name="type">
-                        <option value="issue">issue</option>
-                        <option value="task" selected>task</option>
-                        <option value="requirement">requirement</option>
-                        <option value="change">change</option>
-                        <option value="risk">risk</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Status :</span><select name="status">
-                        <option value="Open">Open</option>
-                        <option value="Closed">Closed</option> 
-                        <option value="Pending">Pending</option> 
-                    </select>
-                </label>
-                <label>
-                    <span>Progress :</span></span><textarea name="progress" id="" ></textarea>
-                </label>
-                <label>
-                    <span>&nbsp;</span>
-                    <input type="button" class="button" value="Cancel" onclick="cancel_edit()" />
-                    <input type="submit" class="button" value="Save" />
-                    
-                </label>
-            </form> 
-        </div>
-    
+                <form id="edit_form" action="/api/issues_v1/saveedit" method="post" enctype="multipart/form-data">
+                    <label style="display: none;">
+                        <span>ID :</span>
+                        <input type="text" name="id" placeholder="" />
+                    </label>
+                    <label>
+                        <span>Title :</span>
+                        <input  type="text" name="title" readonly="readonly" placeholder="" />
+                    </label>
+                    <label>
+                        <span>Create Time :</span><input   type="text" name="createtime" readonly="readonly" placeholder="" />
+                    </label>                
+                    <label>
+                        <span>Severity :</span><select   name="priority">
+                            <option value="Critical">Critical</option>
+                            <option value="Major">Major</option>
+                            <option value="Minor" selected>Minor</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Type :</span><select name="itype" >
+                            <option value="issue">issue</option>
+                            <option value="task" selected>task</option>
+                            <option value="requirement">requirement</option>
+                            <option value="change">change</option>
+                            <option value="risk">risk</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Status :</span><select name="status">
+                            <option value="Open" selected>Open</option>
+                            <option value="Closed">Closed</option> 
+                            <option value="Pending">Pending</option> 
+                        </select>
+                    </label>
+                    <label>
+                        <span>Progress :</span></span><textarea name="progress" id="" ></textarea>
+                    </label>
+                    <label>
+                        <span>&nbsp;</span>
+                        <input type="button" class="button" value="Cancel" onclick="cancel_edit()" />
+                        <input type="submit" class="button" value="Save" />
+                    </label>
+                </form>
+             </div>
     {% endblock %}
 
 
