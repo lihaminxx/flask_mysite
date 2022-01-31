@@ -4,6 +4,53 @@ window.onload =  function(){
 
 
 
+//导出excel 
+function exportExcel(id){
+    tb = document.getElementById(id)
+    let str=''
+    for (let i=0;i<tb.rows.length;i++){
+        row = tb.rows[i]
+        if ( row.style.display == ''){
+            // console.log(row.cells)
+            for (let j=0;j<row.cells.length-1;j++){
+                // console.log(row.cells[j].innerHTML)
+                // 表头里的筛选按钮，取值 
+                if (i==0 && row.cells[j].childElementCount>0){
+                    // console.log( row.cells[4].childNodes[0].selectedOptions[0].innerText)
+                    // console.log(row.cells[j].childNodes[0])
+                    str += '"' + row.cells[j].childNodes[0].selectedOptions[0].innerText  + '",'  ;
+                }else if (i!=0 && row.cells[j].childElementCount>0){
+                    // console.log(row.cells[j])
+                    // 表格里如果有插入链接时获取值 a标签的值 ，如果是textarea获取value
+                    // console.log(row.cells[j].childNodes[0].nodeName)
+                    if ( row.cells[j].childNodes[0].nodeName == 'A'){
+                        str += '"' +  row.cells[j].childNodes[0].innerText + '",'  ;
+                    }
+                    if ( row.cells[j].childNodes[0].nodeName == 'TEXTAREA'){
+                        // 将 yyyymmdd前面加个换行
+                        // str += '"' +  row.cells[j].childNodes[0].value.replace(/ (\d{8})/g,'\r\n'+"$1")  + '",'  ;
+                        str += '"' +  row.cells[j].childNodes[0].value  + '",'  ;
+                    }                    
+                    // str += row.cells[j].childNodes[0].selectedOptions[0].innerText  + '\t' ;
+                }else{
+                    str += '"' + row.cells[j].innerText + '",' ;
+                }
+            }
+            str += '\n';
+        } 
+       
+    }
+    // console.log(str)
+    let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
+    //通过创建a标签
+    let link = document.createElement("a");
+    link.href = uri;
+    link.download = "table_export.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 // V1:更新后端从表查询数据,直接返回,在前端创建表展示
 function show_status_issue(i_status){
     let xhttp = new XMLHttpRequest()
@@ -69,10 +116,11 @@ function show_status_issue(i_status){
             // 单个列表数据插入到行元素
             function table_inst_list_to_row_cell(irow,ilist){
                 for(let j=0;j<ilist.length;j++){
-                  
                     var cell=irow.insertCell();
-                    // 去掉首尾的单引号
-                    ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'').replace(/^\'/gm,'').replace(/\\n/gm,String.fromCharCode(10));
+                    // 去掉首尾的单引号 将\n 替换成HTML能读懂的换行 ,另外每次保存到后台时会多出\r，需要在显示时再删除
+                    // ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'').replace(/^\'/gm,'').replace(/\\n/gm,String.fromCharCode(10));
+                    // ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'').replace(/^\'/gm,'').replace(/\\n/g,"<br/>").replace(/\\r/g,'')
+                    ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'').replace(/^\'/gm,'').replace(/\\n/g,"<br/>").replace(/\\r/g,'')
                     if (j==1){
                         ilist[j] = ilist[j].substring(0,11)
                     }
@@ -211,31 +259,36 @@ function issue_list_add_option(){
 
 
 function delete_issue(obj){
-    confirm('Sure delete this Issue?')
-    row = obj.parentNode.parentNode
-    var index=obj.parentNode.parentNode.rowIndex;
-    id = row.cells[0].innerText
-    xmlhttp=new XMLHttpRequest();
-    xmlhttp.open("GET","/api/issues_v1/delete/"+id,true);
-    xmlhttp.send();
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    var a=confirm('Sure delete this Issue?');
+    if(a){
+        row = obj.parentNode.parentNode
+        var index=obj.parentNode.parentNode.rowIndex;
+        id = row.cells[0].innerText
+        xmlhttp=new XMLHttpRequest();
+        xmlhttp.open("GET","/api/issues_v1/delete/"+id,true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange=function()
         {
-           console.log(xmlhttp.responseText)
-           if (xmlhttp.responseText ==  "Failed"){
-                alert('delete issue '+ String(id) + ' failed, please check from backend')
-                return;
-           }
-           var table = row.parentNode.parentNode
-           var len = table.rows.length; 
-           table.deleteRow(index);
-           alert('issue '+ String(id) + ' success')
-        //    for(var i = 0;i < len;i++){
-        //        table.deleteRow(index);
-        //    }
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+            console.log(xmlhttp.responseText)
+            if (xmlhttp.responseText ==  "Failed"){
+                    alert('delete issue '+ String(id) + ' failed, please check from backend')
+                    return;
+            }
+            var table = row.parentNode.parentNode
+            var len = table.rows.length; 
+            table.deleteRow(index);
+            alert('issue '+ String(id) + ' success')
+            //    for(var i = 0;i < len;i++){
+            //        table.deleteRow(index);
+            //    }
+            }
         }
+    }else{
+        return false;
     }
+    
 }
 
 
@@ -305,14 +358,22 @@ function tableContentSearch(searchBoxID,tableID,cols=[]){
     // cols=[0,1,2,3,4,5,6,7,8]
     
     for (i = 1; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-          if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-          } else {
+        // td = tr[i].getElementsByTagName("td")[0];
+        cols_list = tr[i].getElementsByTagName("td");
+        ifmatch = 0
+        for (j=0 ;j <= cols_list.length; j++){
+            td = cols_list[j]
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    ifmatch = 1
+                } 
+              } 
+        }
+        if (ifmatch == 0){
             tr[i].style.display = "none";
-          }
-        } 
+        }else{
+            tr[i].style.display = "";
+        }
       }
 }
 

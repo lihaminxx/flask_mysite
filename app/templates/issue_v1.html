@@ -46,11 +46,12 @@
 
     {% block right %}
     <div class="statusCollettion">
-        <a href="#" onclick="show_status_issue('all')">All</a>
-        <a href="#" onclick="show_status_issue('Open')">Open</a>
-        <a href="#" onclick="show_status_issue('Closed')">Closed</a>
-        <a href="#" onclick="show_status_issue('Pending')">Pending</a>
+        <a   onclick="show_status_issue('all')">All</a>
+        <a   onclick="show_status_issue('Open')">Open</a>
+        <a   onclick="show_status_issue('Closed')">Closed</a>
+        <a   onclick="show_status_issue('Pending')">Pending</a>
         <input type="text" id="myInput" onkeyup="tableContentSearch('myInput','issues')" placeholder="Search...">
+        <a  onclick="exportExcel('issues_table')">Export</a>
     </div>
         <div class="issues" id="issues">
             

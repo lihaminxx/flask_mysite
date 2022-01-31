@@ -1,11 +1,39 @@
-.father_ul::before{
-    content: "";
-    display: inline-block;
-    width: 10px; 
+.knowledge{
+    padding-top: 30px;
+}
+.knowledge a {
+    display: block;
+    text-decoration: underline;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    color: #0393d3;
+    font-weight: normal;
+    border:1px solid transparent;
+    height: 18px;
+    padding: 0 auto;
+    line-height: 18px;
+    transition: background-color 0.5s, border-color 0.5s;
+    border-top: turquoise;
+    border-bottom: turquoise;
+    border-right: turquoise;
+    /* background-color: #f7f7f7; */
+    background:transparent ;
+    cursor: pointer;
+  }
+  .knowledge li {
+    list-style: none;
     height: 20px;
+    padding: 5px;
+    
+  }
 
+
+.left {
+    overflow: auto;
+    
 }
 
-.container {
-    overflow: auto;
+
+.left a{
+    cursor: pointer;
 }

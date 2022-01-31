@@ -187,6 +187,7 @@ width: 174px;
   border: 1px solid transparent;
   padding: 0 auto;
   transition:background-color 0.5s, border-color 0.5s; 
+  cursor: pointer;
 }
 
 .statusCollettion a:hover{

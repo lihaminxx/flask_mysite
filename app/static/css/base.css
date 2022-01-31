@@ -48,9 +48,8 @@
 
 .right {
     min-width: 300px;
-    margin-left: 180px;
     width:100%;
-    margin-left:200px;
+    margin-left:206px;
 }
 .header ul li {
     list-style: none;
@@ -133,6 +132,11 @@
 }
 .leftNav {
     text-align: center;
+    border: darkblue 1px solid;
+    height: 82%;
+    margin-top: 6px;
+    margin-left: 3px;
+    margin-right: 3px;
   }
 .leftNav a {
     display: block;

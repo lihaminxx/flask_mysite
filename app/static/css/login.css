@@ -42,11 +42,31 @@ body {
   width: 340px;
   display: block;
 }
-#loginbutton {
+/* #loginbutton {
   background-color: #3B78DD;
   text-align: center;
   vertical-align: middle;
-}
+} */
+
+.button {
+  background: #3B78DD;
+  border: none;
+  padding: 10px 25px 10px 25px;
+  color: #FFF;
+
+  box-shadow: 1px 1px 5px #B6B6B6;
+  border-radius: 3px;
+  text-shadow: 1px 1px 1px #9E3F3F;
+  cursor: pointer;
+  padding: 0;
+  height: 44px;
+  width: 340px;
+ 
+  }
+.button:hover {
+  background: #CF7A7A
+  }
+
 input[name=username] {
   background-image: url('{{ url_for ( "static", filename="suolong.ico") }}');
 }

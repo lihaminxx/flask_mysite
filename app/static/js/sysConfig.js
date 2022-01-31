@@ -24,14 +24,15 @@
 
 window.onload = function(){
     
-    let ot = document.getElementById('ostype').value
+    let ot = document.getElementById('ostype')
     let isp = document.getElementById('issuepath').value
     let isl = document.getElementById('issuelist').value
     if (ot){
-        console.log(ot)
+        console.log(ot.value)
     }else{
         alert('use are the fisrt time use system, please input the configuration!')
         let o_type = getOsInfo()
+        console.log('OS type: '+ o_type)
         document.getElementById('ostype').value = o_type
     }
 

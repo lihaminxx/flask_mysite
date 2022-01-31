@@ -79,7 +79,8 @@ function showtable(){
                         // 去掉首尾的单引号
                         // ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'')
                         // index 0 前面没有空格，其他有空格，change \n to return
-                        ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'').replace(/^\'/gm,'').replace(/\\n/gm,String.fromCharCode(10));
+                        // ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'').replace(/^\'/gm,'').replace(/\\n/gm,String.fromCharCode(10));
+                        ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'').replace(/^\'/gm,'').replace(/\\n/g,"<br/>").replace(/\\r/g,'')
                         cell.innerHTML=ilist[j];
                     }
                 }

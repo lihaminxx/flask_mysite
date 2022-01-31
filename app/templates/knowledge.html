@@ -7,14 +7,16 @@
 {%  block main %}
     
     {% block left  %}
-    <a href="">OCS</a>
-    <a href="">CRM</a>
+    <ul>
+        {% for i in pathList %}
+         <li onclick="show_knowledge('{{ i }}')"><a> {{ i }} </a></li>
+         {% endfor %}
+    </ul>
+
     {% endblock %}
 
     {% block right %}
-    <div class="statusCollettion" id="search">
-    </div>
-    <div class="showtable" ></div>
+    <div class="knowledge" id="knowledgelist" ></div>
     {% endblock %}
 
 

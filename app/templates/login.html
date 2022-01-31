@@ -18,12 +18,16 @@
         <div id="loginform">
             <p class="logintitle">Login</p>
             <form action="/login" method="POST" >
-                <input class="loginformitem" type="text" name="username" placeholder="Input Username"  required/>
-                <input class="loginformitem"   type="password" name="password" placeholder="Input Password" required/>
-                <input class="loginformitem" id="loginbutton"  type="submit" value="Login"/>
+                <input class="loginformitem" type="text" name="username" placeholder="Username"  required/>
+                <input class="loginformitem"   type="password" name="password" placeholder="Password" required/>
+                <input class="button" id="loginbutton"  type="submit" value="Login"/>
         </div>
     </div>
 
-
+<script>
+    
+    localStorage.setItem("token", "{{token}}");
+    let token = localStorage.getItem('token')
+</script>
 </body>
 </html>

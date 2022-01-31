@@ -157,46 +157,6 @@ function edit_issue(edd){
 
 }
 
-// function edit_issue_v1(edd){
-//     // console.log(edd.parentNode.parentNode)
-//     // 事件里传入的是a标签，需要获通过父节点获取整个行
-//     row = edd.parentNode.parentNode
-//     id = row.cells[0].innerText
-//     createtime = row.cells[1].innerText
-//     type = row.cells[2].innerText
-//     title = row.cells[3].innerText
-//     priority = row.cells[4].innerText
-//     status = row.cells[5].innerText
-//     progress = row.cells[6].firstChild.value
-//     owner =  row.cells[7].innerText
-    
-//     ed_form = document.forms["edit_form_v1"]
-//     ed_form.elements["id"].value = id
-//     ed_form.elements["title"].value = title
-//     ed_form.elements["createtime"].value = createtime
-//     ed_form.elements["status"].value = status
-//     ed_form.elements["priority"].value = priority
-//     ed_form.elements["type"].value = type
-//     ed_form.elements["progress"].value = progress
-
-//     let el_edit_issue = document.getElementById('issue_edit_v1')
-//     el_edit_issue.style.display = "block"
-// }
-
-
-
-// function save_edit(this){
-//     console.log(this)
-//     let r_url = '/api/issues/saveedit' 
-//     xhttp.open("POST", r_url, true);
-//     xhttp.send();
-//     xhttp.onreadystatechange =  function(){
-//         if(this.readyState == 4 && this.status == 200){
-//             console.log(fpath+' open success')
-//         }
-//     }
-// }
-
 function cancel_edit(){
     el_edit_issue = document.getElementById('issue_edit')
     el_edit_issue.style.display = "none"
@@ -361,105 +321,6 @@ function show_status_issue(i_status){
     }
 }
 
-// // V1:更新后端从表查询数据,直接返回,在前端创建表展示
-// function show_status_issue_v1(i_status){
-//     let xhttp = new XMLHttpRequest()
-//     r_url = '/api/issues_db/status/' + i_status
-//     xhttp.open("GET", r_url , true);
-//     xhttp.send();
-//     xhttp.onreadystatechange =  function(){
-//         if(this.readyState == 4 && this.status == 200){
-//             let res_str=xhttp.responseText.replace('\[\(','').replace('\)\]','')
-//             let res_list = res_str.split('\),\ \(')
-
-//             // show as table 
-//             // document.getElementById('issues').style.display = "none"
-//             var el = document.getElementById('issues')
-//             el.style.display = "block"
-//             el.innerHTML=""
-//             // init table 
-//             var table_head =[
-//                 'ID',
-//                 'CreateTime',
-//                 'Type',
-//                 'Title',
-//                 'Priority',
-//                 'Status',
-//                 'Desription',
-//                 'Owner'
-//             ];
-//             //创建table
-//             var table = document.createElement("table");
-   
-//             // table.setAttribute('id','issue_list_db')
-//             table.setAttribute('class','issue_list')
-//             table.setAttribute('id','issues_table')
-//             //创建设置table的标题
-//             // var caption=table.createCaption();
-//             // caption.innerHTML="js operator table";
-         
-//             // 添加表头
-//             var head=table.createTHead();
-//             let thead1 = head.insertRow()
-//             table_inst_list_to_row_th(thead1,table_head)
-
-//             var tb1 = table.createTBody();
-//             // 把内容加进去
-//             if (res_list.length>1){
-//                 table_inst_list_to_rows(tb1,res_list);
-//             }
-
-//             // 把建好的表加到指定元素下
-//             el.appendChild(table);
-            
-//             // 将双层列表[[],[]]数据插入到表里
-//             function table_inst_list_to_rows(base , t_list){
-//                 for(let i=0;i<t_list.length;i++){
-//                     var row=base.insertRow();
-//                     let row_list=t_list[i].split('\', \'')
-//                     // 把单个LIST的数据插入行
-//                     table_inst_list_to_row_cell(row,row_list)
-//                 }
-//             }
-//             // 单个列表数据插入到行元素
-//             function table_inst_list_to_row_cell(irow,ilist){
-//                 for(let j=0;j<ilist.length;j++){
-                  
-//                     var cell=irow.insertCell();
-//                     // 去掉首尾的单引号
-//                     ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'').replace(/^\'/gm,'').replace(/\\n/gm,String.fromCharCode(10));
-//                     if (j==1){
-//                         ilist[j] = ilist[j].substring(0,11)
-//                     }
-//                     cell.innerHTML=ilist[j];
-//                 }
-//             }
-
-//             // 将内容插入到表头里
-//             function table_inst_list_to_row_th(irow,ilist){
-//                 for(let j=0;j<ilist.length;j++){
-//                     let cell = document.createElement('th') 
-//                     ilist[j] = ilist[j].replace(/^ \'|\'$/gm,'')
-//                     cell.innerHTML=ilist[j];                    
-//                     irow.appendChild(cell)
-//                     // 去掉首尾的单引号
-//                 }
-//             }
-//             issue_list_add_link_v1()
-
-//             // 给Status字段添加筛选下拉
-//             tableHeadToSelect_v1('Status')
-//             issue_list_add_option_v1()
-//             change_color_td('issues_table',5,'Open','rgb(255, 203, 203)')
-//             change_color_td('issues_table',5,'Closed','rgb(180, 245, 183)')
-//             change_color_td('issues_table',5,'Pending','#f8f7b6')
-//             change_color_td('issues_table',4,'Critical','rgb(255, 203, 203)')
-//             change_color_td('issues_table',4,'Minor','rgb(180, 245, 183)')
-//             change_color_td('issues_table',4,'Major','#f8f7b6')
-//         }
-//     }
-// }
-
 function change_color_td(table_id,colnum,value,scolor){
     let e_table = document.getElementById(table_id)
     if (e_table)
@@ -506,7 +367,6 @@ function openlocal_file_md(fpath)
     if (fpath.indexOf('D:\\') == -1){
         fpath = 'D:\\' + fpath
     }
-    console.log('openlocal_file_md')
     let r_url = '/api/openlocal/file/md/' + fpath 
     xhttp.open("GET", r_url, true);
     xhttp.send();

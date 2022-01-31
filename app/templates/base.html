@@ -30,17 +30,19 @@
                 <a href="/index">
                 <img src={{ url_for ('static',filename="img/home.svg") }} alt="Home"></a>
             </li>
-            <li class="header-left"><a href="/issue">Issue</a></li>
-            <li class="header-left"><a href="/tools">Tools</a></li>
+            <li class="header-left"><a href="/api/issues/v1">Issue</a></li>
             <li class="header-left"><a href="/site">Site</a></li>
             <li class="header-left"><a href="/knowledge">Knowledge</a></li>
+            <li class="header-left"><a href="/tools">Tools</a></li>
             <li class="header-left"><a href="/sysConfig">SysConfig</a></li>
             <li class="header-right"><a href="/logout">Logout</a></li>
             <li class="header-right"><a href="#"> {{ session['user_info']}}</a></li>
             
         </ul>
     </div>
+    
     <div class="container">
+        {% block container %}
         <div class="left leftNav">
             {% block left %}
             {% endblock %}
@@ -49,6 +51,7 @@
             {% block right %}
             {% endblock %}
         </div>
+        {% endblock %}
     </div>
     <div class="footer">
         {% block footer %}
@@ -58,11 +61,13 @@
     </div>
 
     <div id="issuepath" d= "{{ session['ISSUE_PATH']}}" style="display:none"></div>
+    
+
 </div>
     {% block js %}
     {% endblock %}
     <script>
-        $(".message").fadeOut(3000)
+        $(".message").fadeOut(6000)
     </script>
 
 </body>

@@ -3,6 +3,7 @@ from flask.helpers import url_for
 import pandas as pd
 import os
 import datetime
+import time
 import re
 import json
 from werkzeug.datastructures import ContentSecurityPolicy
@@ -14,7 +15,7 @@ import sqlite3
 # import win32gui ,win32com, win32com.client
 from py_excel import excelFormat
 import platform
-
+import app_api
 
 app = Flask(__name__)
 
@@ -30,6 +31,7 @@ app.config['DEBUG'] = True
 def init_config():
     app.config['ISSUE_LIST'] = cur.execute('SELECT value FROM sysconfig where id=2').fetchall()[0][0]
     app.config['ISSUE_PATH'] = cur.execute('SELECT value FROM sysconfig where id=1').fetchall()[0][0]
+    app.config['KNOWLEDGE_PATH'] = r'D:\Lihanmin\Knowledge' 
     app.config['PROJECTS_PATH'] = cur.execute('SELECT value FROM sysconfig where id=1').fetchall()[0][0]
     # app.config.from_object("setting.dev")
 
@@ -212,13 +214,18 @@ def logout():
 def cmd():
     return render_template('cmd.html')
 
-@app.route('/knowledge', methods=['POST', 'GET'])
+@app.route('/knowledge')
 def knowledge():
-    return render_template('knowledge.html')
+    # get the path from sysconfig
+    kpath = app.config['KNOWLEDGE_PATH']
+    k = MyKnowledge(kpath)
+    pathList =  k.getPathList()
+    return render_template('knowledge.html',pathList = pathList)
 
 @app.route('/site')
 def site():
     return render_template('site.html')
+
 
 
 # ------------------------------Functions
@@ -409,8 +416,10 @@ class MyIssue:
             sql = 'select max(id) from issues;'
             newid = cur.execute(sql).fetchall()[0][0]
             newid = int(newid) + 1
+            # 把YYYYMMDD转成 YYYY-MM-DD
+            cdate1 = self.cdate[0:4]+ "-" + self.cdate[4:6]+ "-" + self.cdate[6:8]
             sql = "insert into issues values(" + str(newid) + \
-                ",'" + self.cdate +"'" \
+                ",'" + cdate1 +"'" \
                 ",'" + self.issue_type +"'" \
                 ",'" + self.title +"'" \
                 ",'" + self.priority +"'" \
@@ -473,30 +482,59 @@ class MyProject:
         print("create new project %s" % self.p_name)
 
 class MyKnowledge:
-    def __init__(self,tname="",know_id=0):
-        self.tablename = tname
-        self.know_id = know_id
+    def __init__(self,kpath="",filename=""):
+        self.kpath = kpath
+        self.filename = filename
 
-    def show_table(self):
-        tablerows = None
+    def getPathList(self):
+        kpath = self.kpath
+        filelist_dic = {}
+        if os.path.exists(kpath):
+            try:
+                os.chdir(kpath)
+                pathList = os.listdir()
+                k_left_list = []
+                for i in pathList:
+                    if os.path.isdir(i) and not re.search('\.git',i):
+                        k_left_list.append(i)
+                        # filelist = searchMDfile(i)
+                        # filelist_dic[i] = filelist
+                return k_left_list
+            except Exception as a:
+                print(a)
+                return "ERROR"
+        else:
+            return "ERROR"
+
+    # 获取目录下的所有md文件
+    def searchMDfile(self):
+        kpath = self.kpath
+        mdFileList = []
+        if os.path.exists(kpath):
+            for i in os.walk(kpath):
+                # a = re.search('\.md',i[2])
+                if (not re.search('\.git',i[0])):
+                    for j in i[2]:
+                        if re.search('\.md$',j):
+                            mdFileList.append(j)
+        return mdFileList
+
+    def knowledge_openmdfile(self):
         try:
-            tablehead = cur.execute('select sql from sqlite_master where type="table" and name="' + self.tablename +'"').fetchall()[0][0]
-            p1 = re.compile(r'[(](.*?)[)]',re.S)
-            tablehead = re.findall(p1,tablehead)[0].split(',')
-            tableheadres = []
-            for i in range(0,len(tablehead)):
-                tableheadres.append(tablehead[i].split()[0])
-            tableheadres = tuple(tableheadres)
-            tablerows = cur.execute('SELECT * FROM ' +  self.tablename ).fetchall()
-            tablerows.insert(0,tableheadres)
-            tablerows = str(tablerows)    
-            return tablerows
-        except Exception as a :
-            print (a)
-            return "Falied"
+            kpath = self.kpath;
+            kfilename = self.filename
+            print('open local knowlege ' + kfilename)
+            if os.path.exists(kpath):
+                for i in os.walk(kpath):
+                    if (not re.search('\.git',i[0])):
+                        for j in i[2]:
+                            if re.search('\.md$',j) and j == kfilename:
+                                file_full_path = str(i[0]) + '\\' +j
+                                print(file_full_path)
+                                os.system('"' + file_full_path + '"')
 
-    def new_knowledge(self):
-        pass
+        except Exception as a :
+            print(a)                        
 
     def remove_knowledge(self,know_id):
         pass
@@ -565,6 +603,8 @@ def get_os_type():
 
 
 # for API ===============================================
+
+
 @app.route('/api/issues', methods=['GET'])
 def api_issues():
     '''     
@@ -595,6 +635,7 @@ def api_excel_format():
     return ihtml
 
 
+
 @app.route('/api/issues/status/<i_status>', methods=['GET'])
 def api_issues_sp_status(i_status="all"):
     '''     
@@ -616,7 +657,6 @@ def api_fastcreateissue():
     '''     
     show specified status issue list on the page from database(sqlite3)
     '''
-    
     return issues_list
 
 @app.route('/api/issues_v1/status/<i_status>', methods=['GET'])
@@ -833,6 +873,7 @@ def api_issues_v1_fastcreate():
         itype = request.form.get('issue_type')  
         priority = request.form.get('severity')  
         cdate = datetime.datetime.now().strftime("%Y%m%d")
+        # cdate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         issue = MyIssue(title=title,cdate=cdate,issue_type=itype,priority=priority,verid=1)
         try:
             issue.create_path()
@@ -857,16 +898,28 @@ def siteinfo_show(table_name):
     except Exception as a:
         return "Failed"
 
-
-@app.route('/api/knowledge/<table_name>' ,methods=['GET'])
-def knowledge_show(table_name):
+@app.route('/api/knowledge/<kpath>' ,methods=['GET'])
+def knowledge_show(kpath):
     try:
-        myknow = MyKnowledge(tname=table_name)
-        res = myknow.show_table()
+        myknow = MyKnowledge(kpath)
+        res = myknow.searchMDfile()
         return str(res)
     except Exception as a:
         return "Failed"
-    
+
+@app.route('/api/knowledge/openmdfile/<filename>' ,methods=['GET'])
+def k_openmdfile(filename):
+    try:
+        filename = unquote(filename, 'utf-8')
+        print ('opepmdfile: ' + filename)
+        kpath = app.config['KNOWLEDGE_PATH']
+        k = MyKnowledge(kpath=kpath,filename=filename)
+        k.knowledge_openmdfile()
+        # os.system(fpath)
+        return "Success"
+    except Exception as a:
+        print(a)
+        return "Failed"  
 
 def table_exists(con,table_name):  
     # sqlite3
@@ -879,6 +932,23 @@ def table_exists(con,table_name):
     else:
         return 0        #不存在返回0
 
+
+@app.route('/api/index/issueReport' ,methods=['GET'])
+def collect_issue_report():
+    try:
+        if table_exists(cur,"issue_report"):
+            cur.execute("drop table issue_report;")
+        
+        sql = "create table issue_report as select STATUS,COUNT(*) Count  from issues GROUP BY STATUS;"
+        cur.execute(sql)
+        C_showtable = Site('issue_report')
+        res = C_showtable.show_table()
+        return str(res)
+    except Exception as a:
+        print(a)
+        return "Failed"
+
+
 # @app.route('/uploadFile', methods=['POST', 'GET'])
 # def upload_file_to_server():
 #     if request.method == 'POST':
@@ -890,33 +960,7 @@ def table_exists(con,table_name):
 #     return render_template('upload.html')
 
 
-# @app.route('/impExcelToDB', methods=['POST', 'GET'])
-# def imp_excel_to_db():
-#     if request.method == 'POST':
-#         f = request.files['file']
-#         return redirect(url_for('upload'))
-#     return render_template('upload.html')
 
-
-# @app.route('/<path:re_path>')
-# def api_openfile(re_path):
-#     BASE_DIR = '/'
-#     abs_path = os.path.join(BASE_DIR, re_path)
-#     if not os.path.exists(abs_path):
-#         return abort(404)
-#     if os.path.isdir(abs_path):
-#         os.system("open %s" % abs_path ) 
-#     elif os.path.isfile(abs_path):
-#         if os_file_type(abs_path) == "EXCEL":
-#             os.system("open -a /Applications/wpsoffice.app %s" % abs_path )
-#         elif os_file_type(abs_path) == "TEXT" :
-#             if len(re.findall("\.md$",abs_path)) == 1:
-#                 os.system("open -a /Applications/Typora.app %s" % abs_path)
-#             else:
-#                 os.system("code %s" % abs_path)
-#         else:
-#             flash ('unkow file type')
-#     return  "xxx"
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1',port=8484)

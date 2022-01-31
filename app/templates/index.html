@@ -5,35 +5,39 @@
 <script type="text/javascript" src="{{ url_for ('static',filename="js/index.js") }}" ></script>
 {% endblock%}
 {%  block main %}
-    
-    {% block  left  %}
-    {% endblock %}
-
-    {% block right %}
-        <div id="fileopen">
-        </div>
-        <div class="cutoverBorder">
-            <span>Cutover Date: </span> <input id="edate" onchange="time_cal()" type="date" value="2021-12-18">
-            <h1>Date to cutover: <span id="codays"></span> Days</h1>
-        </div>
+    {% block  container  %}
+    <table class="dashborad_r1">
+        <thead>
+            <tr>
+                <th>Cutover Days</th>
+                <th>Issue Report</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="cutoverBorder">
+                        <span>Cutover Date: </span> <input id="edate" onchange="time_cal()" type="date" value="2021-12-18">
+                        <p> Cutover <span id="codays"></span> Days</p>
+                    </div>
+                </td>
+                <td>
+                    <div id="issue_report" >
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+       
+    </table>
+        
+      
         
     {% endblock %}
 
     {% block js %}
     
-    <script>
-        function openfile(fpath)
-        {  
-            let xhttp = new XMLHttpRequest()
-            xhttp.onreadystatechange =  function(){
-                if(this.readyState == 4 && this.status == 200){
-                    document.getElementById('fileopen').innerText = "success"
-                }
-            }
-            xhttp.open("GET", fpath, true);
-            xhttp.send();
-        }
-    </script>
         
     {% endblock %}
 {%  endblock %}
