@@ -31,7 +31,7 @@ app.config['DEBUG'] = True
 def init_config():
     app.config['ISSUE_LIST'] = cur.execute('SELECT value FROM sysconfig where id=2').fetchall()[0][0]
     app.config['ISSUE_PATH'] = cur.execute('SELECT value FROM sysconfig where id=1').fetchall()[0][0]
-    app.config['KNOWLEDGE_PATH'] = r'D:\Lihanmin\Knowledge' 
+    app.config['KNOWLEDGE_PATH'] = r'D:\Knowledge' 
     app.config['PROJECTS_PATH'] = cur.execute('SELECT value FROM sysconfig where id=1').fetchall()[0][0]
     # app.config.from_object("setting.dev")
 

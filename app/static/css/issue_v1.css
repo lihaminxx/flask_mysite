@@ -232,14 +232,16 @@ width: 174px;
 
 
 .edit_show_box {
-  background-color: #0393d3;
+  background-color: #97cde4;
   position: fixed;
   float: left;
   margin: 0px auto;
-  top:72px;
-  left:500px;
-  width: 50px;
+  top:90px;
+  left:650px;
+  width: 80px;
+  height: 25px;
   display: none;
+  cursor: pointer;
 }
 
 
